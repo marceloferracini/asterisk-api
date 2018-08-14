@@ -15,7 +15,7 @@ include "asterisk.php";
 
 function main(){
 
-    $asterisk = new asterisk();
+    $asterisk = new asterisk($argv);
     $asterisk->control();
 }
 
