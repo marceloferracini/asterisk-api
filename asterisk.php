@@ -8,31 +8,46 @@ class asterisk implements Iasterisk
 {
     private $file_name;
     private $file_path;
+    private $agi;
 
+    /**
+     * asterisk constructor.
+     * @param $array_file
+     *
+     */
     public function  __construct($array_file)
     {
         $this->file_path = $array_file[1];
         $this->file_name = $array_file[2];
+
+        // creating a AGI instance
+        $this->agi = new AGI();
     }
 
+
+    /**
+     *
+     * I will change all this function, for now is only a test
+     *
+     */
     public function control()
     {
 
+
+
+
+
         ob_start("xxx");
 
-        // Instanciando o AGI
-        $agi = new AGI();
+        echo "\n";
+
+        $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_name);
 
         echo "\n";
 
-        $agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_name);
+        $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_path);
 
         echo "\n";
-
-        $agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_path);
-
-        echo "\n";
-
 
         $url = system("curl http://www.meupro.com.br/teste.php \n");
 
@@ -52,9 +67,9 @@ class asterisk implements Iasterisk
 
         echo "\n";
 
-        $agi->set_variable("resposta", $resposta);
+        $this->agi->set_variable("resposta", $resposta);
 
-        exit(1);
+        return 1;
 
     }
 }
