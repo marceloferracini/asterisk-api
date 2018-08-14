@@ -2,10 +2,10 @@
 /*
 #!/usr/bin/php
 <?php
-ob_start("xxx");
+ob_start();
 include "asterisk-api/envio.php";
 ob_end_flush();
-main();
+main($argv);
 */
 
 error_reporting(0);
@@ -13,7 +13,7 @@ error_reporting(0);
 
 include "asterisk.php";
 
-function main(){
+function main($argv){
 
     $asterisk = new asterisk($argv);
     $asterisk->control();

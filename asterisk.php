@@ -11,8 +11,8 @@ class asterisk implements Iasterisk
 
     public function  __construct($argv)
     {
-        $this->file_name = $argv[1];
-        $this->file_path = $argv[2];
+        $this->file_path = $argv[1];
+        $this->file_name = $argv[2];
     }
 
     public function control()
@@ -29,7 +29,7 @@ class asterisk implements Iasterisk
 
         echo "\n";
 
-        $agi->exec("NOOP", "VALOR\ recebido:\ $argv[2]");
+        $agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_path);
 
         echo "\n";
 
@@ -39,12 +39,12 @@ class asterisk implements Iasterisk
         //$filename = substr($url, strripos($url,"/"), strlen($url) );
 
 
-        system("wget " . $url . " -O /var/lib/asterisk/sounds/" . $argv[2] . ".wav");
+        system("wget " . $url . " -O /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
 
-        system("chmod 777 /var/lib/asterisk/sounds/" . $argv[2] . ".wav");
+        system("chmod 777 /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
 
 
-        $resposta = $argv[2];
+        $resposta = $this->file_name;
 
 
         ob_end_flush();
