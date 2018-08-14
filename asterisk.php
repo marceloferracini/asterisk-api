@@ -2,17 +2,17 @@
 
 include "Iasterisk.php";
 require __DIR__ . '/vendor/autoload.php';
-//include_once("vendor/d4rkstar/phpagi/phpagi.php");
+
 
 class asterisk implements Iasterisk
 {
     private $file_name;
     private $file_path;
 
-    public function  __construct($argv)
+    public function  __construct($array_file)
     {
-        $this->file_path = $argv[1];
-        $this->file_name = $argv[2];
+        $this->file_path = $array_file[1];
+        $this->file_name = $array_file[2];
     }
 
     public function control()
@@ -25,7 +25,7 @@ class asterisk implements Iasterisk
 
         echo "\n";
 
-        $agi->exec("NOOP", "VALOR\ recebido:\  " . $this->file_name);
+        $agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_name);
 
         echo "\n";
 

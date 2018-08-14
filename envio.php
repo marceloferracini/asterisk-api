@@ -1,22 +1,22 @@
 <?php
-/*
-#!/usr/bin/php
-<?php
-ob_start();
-include "asterisk-api/envio.php";
-ob_end_flush();
-main($argv);
+/* example envio.php on ../root folder:
+
+    #!/usr/bin/php
+    <?php
+    ob_start();
+    include "asterisk-api/envio.php";
+    ob_end_flush();
+    main($argv);
 */
 
 error_reporting(0);
-//include_once("phpagi-2.20/phpagi.php");
 
 include "asterisk.php";
 
-function main($argv){
+function main($array_files){
 
-    $asterisk = new asterisk($argv);
-    $asterisk->control();
+    $asterisk = new asterisk($array_files);
+    return $asterisk->control();
 }
 
 ?>
