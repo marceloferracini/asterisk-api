@@ -1,6 +1,8 @@
 <?php
 
 include "Iasterisk.php";
+require __DIR__ . '/vendor/autoload.php';
+
 
 class asterisk implements Iasterisk
 {
@@ -33,13 +35,12 @@ class asterisk implements Iasterisk
 
         system("chmod 777 /var/lib/asterisk/sounds/" . $argv[2] . ".wav");
 
-        //system("sox ret.wav -r 8k -c 1 -e gsm ret.wav");
 
         $resposta = $argv[2];
 
-        //echo $resposta;
 
         ob_end_flush();
+
 
         echo "\n";
 

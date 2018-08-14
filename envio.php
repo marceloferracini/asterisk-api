@@ -9,7 +9,8 @@ main();
 */
 
 error_reporting(0);
-include_once("phpagi-2.20/phpagi.php");
+//include_once("phpagi-2.20/phpagi.php");
+
 include "asterisk.php";
 
 function main(){
