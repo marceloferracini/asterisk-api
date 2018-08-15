@@ -1,0 +1,75 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "b9ec478a9c20b5ec06588783ca2ac42c",
+    "packages": [
+        {
+            "name": "d4rkstar/phpagi",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/d4rkstar/phpagi.git",
+                "reference": "b8cd06ede9b5257cced659bf6fcf58186850ec2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/d4rkstar/phpagi/zipball/b8cd06ede9b5257cced659bf6fcf58186850ec2b",
+                "reference": "b8cd06ede9b5257cced659bf6fcf58186850ec2b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "phpagi.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Florian Overkamp",
+                    "email": "florian@speakup.nl",
+                    "homepage": "http://phpagi.sourceforge.net/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Eder",
+                    "email": "david@eder.us",
+                    "homepage": "http://phpagi.sourceforge.net/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHPAGI is a PHP class for the Asterisk Gateway Interface. The package is available for use and distribution under the terms of the GNU Public License.",
+            "homepage": "http://phpagi.sourceforge.net/",
+            "keywords": [
+                "agi",
+                "asterisk",
+                "call",
+                "client",
+                "flow",
+                "ivr",
+                "telephony",
+                "voip"
+            ],
+            "time": "2018-01-27T05:22:08+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "d4rkstar/phpagi": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
