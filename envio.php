@@ -9,10 +9,11 @@
     main($argv);
 */
 
-error_reporting(0);
+error_reporting(1);
 
+echo "ini";
 include "asterisk.php";
-
+echo "passou";
 function main($array_files){
 
     $asterisk = new asterisk($array_files);
