@@ -13,6 +13,10 @@ class asterisk implements Iasterisk
     private $curl;
     private $dotenv;
 
+    //config with default vars
+    private $min_confidence = 80;
+    private $message_not_understand = 'Desculpe, não consegui te endender, poderia repetir?';
+
     /**
      * asterisk constructor.
      * @param $array_file
@@ -39,67 +43,97 @@ class asterisk implements Iasterisk
      * @return NULL
      *
      */
-    public function __destruct(){
+    public function __destruct()
+    {
 
         $this->curl->close();
 
     }
 
-
     /**
+     * This function control the comunication between Asterisk and Astrid
      *
-     * I will change all this function, for now is only a test
-     *
+     * @return int|mixed
      */
     public function control()
     {
 
         //translate audio to text
-       // echo $this->textToSpeech('isto é um teste');
-        echo "<hr>";
-        echo $this->speechToText('/Users/lancedon/teste.wav');
+        $message = $this->speechToText( $this->file_path );
+
+        if($message['status'] == 1){
+
+            //send text to astrid-api
+            $astrid_answer = $this->callAstrid($message['transcript']);
+
+            //translate text to audio
+            $ret['transcript'] = $this->textToSpeech( $astrid_answer );
 
 
-        //send text to astrid-api
 
-        //translate text to audio
+        }else{
 
-        //set retorno to asterisk
+            $ret = $this->textToSpeech( $this->message_not_understand );
 
-        ob_start("xxx");
+        }
 
+        /*
+
+                echo  print_r($this->textToSpeech('isto é um teste'),true);
+
+                echo "<hr>";
+
+                echo $this->speechToText('/var/www/html/teste.wav');
+
+
+                //set retorno to asterisk
+
+                ob_start("xxx");
+
+                echo "\n";
+
+                $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_name);
+
+                echo "\n";
+
+                $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_path);
+
+                echo "\n";
+
+                $url = system("curl http://www.meupro.com.br/teste.php \n");
+
+                //$filename = substr($url, strripos($url,"/"), strlen($url) );
+
+
+                system("wget " . $url . " -O /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
+
+                system("chmod 777 /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
+
+
+                $resposta = $this->file_name;
+
+
+                ob_end_flush();
+
+        */
         echo "\n";
 
-        $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_name);
-
-        echo "\n";
-
-        $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_path);
-
-        echo "\n";
-
-        $url = system("curl http://www.meupro.com.br/teste.php \n");
-
-        //$filename = substr($url, strripos($url,"/"), strlen($url) );
-
-
-        system("wget " . $url . " -O /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
-
-        system("chmod 777 /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
-
-
-        $resposta = $this->file_name;
-
-
-        ob_end_flush();
-
-
-        echo "\n";
-
-        $this->agi->set_variable("resposta", $resposta);
+        $this->agi->set_variable("resposta", $ret['transcript']);
 
         return 1;
 
+    }
+
+    /**
+     * This function will call the Astrid API to get the Dialogflow answer
+     *
+     * @param $message
+     * @return string
+     */
+    private function callAstrid($message)
+    {
+        $ret = ""; //call astrid
+        return $ret;
     }
 
     /**
@@ -107,7 +141,7 @@ class asterisk implements Iasterisk
      *
      * @param string $message
      *
-     * @return string
+     * @return array
      *
      */
     private function textToSpeech($message)
@@ -118,11 +152,13 @@ class asterisk implements Iasterisk
                                                                            ));
         if ($this->curl->error) {
             
-            $ret = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
+            $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
+            $ret['status'] = 0;
 
         }else{
 
-            $ret = $this->curl->response;
+            $ret['transcript'] = $this->curl->response;
+            $ret['status'] = 1;
         }
         
         return $ret;
@@ -134,39 +170,38 @@ class asterisk implements Iasterisk
      *
      * @param string $audio_path
      *
-     * @return string
+     * @return array
      *
      */
     private function speechToText($audio_path)
     {
-            $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
 
-
-         $this->curl->setHeader('Content-Type', 'multipart/form-data');
-
-/*         
-
-         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
+        $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
+        $this->curl->setHeader('Content-Type', 'multipart/form-data');
+        $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
-       
-          
-"audio" => new CURLFile( $audio_path ) , 
-*/
-        $this->curl->post( 'http://www.meupro.com.br/teste.php', array(
-                                                                            "audio" => new CURLFile( $audio_path ) ,       
-                                                                           ));
-
-
         if ($this->curl->error) {
             
-            $ret = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
+            $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
+            $ret['status'] = 0;
 
         }else{
 
             $ret = $this->curl->response;
+
+            if($ret['confidence'] >= $this->min_confidence ){
+
+                $ret['status'] = 1;
+
+            }else{
+
+                $ret['transcript'] = "Error, confidence too low: " . $ret['confidence'];
+                $ret['status'] = 0;
+
+            }
         }
-        
+
         return $ret;
 
     }

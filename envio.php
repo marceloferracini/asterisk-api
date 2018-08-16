@@ -19,5 +19,6 @@ function main($array_files){
     $asterisk = new asterisk($array_files);
     return $asterisk->control();
 }
+main(array('aa','bb'));
 
 ?>
