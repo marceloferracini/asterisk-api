@@ -1,16 +1,16 @@
 <?php
 
-interface Iasterisk
+interface IAsterisk
 {
 
     /**
-     * Iasterisk constructor.
+     * IAsterisk constructor.
      * @param $array_file
      */
     public function  __construct($array_file);
 
     /**
-     * Iasterisk destruct.
+     * IAsterisk destruct.
      */
     public function __destruct();
 
@@ -23,18 +23,18 @@ interface Iasterisk
      * @param $message
      * @return mixed
      */
-    private function callAstrid($message);
+    public function callAstrid($message);
 
     /**
      * @param $audio_path
      * @return mixed
      */
-    private function speechToText($audio_path)
+    public function speechToText($audio_path);
 
     /**
      * @param $message
      * @return mixed
      */
-    private function textToSpeech($message)
+    public function textToSpeech($message);
 
 }

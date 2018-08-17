@@ -1,11 +1,15 @@
 <?php
 
-include "Iasterisk.php";
-require __DIR__ . '/vendor/autoload.php';
+include "IAsterisk.php";
+include "DialogFlow.php";
+
+require __DIR__ . '/../vendor/autoload.php';
 
 use \Curl\Curl;
 
-class asterisk implements Iasterisk
+
+
+class Asterisk implements IAsterisk
 {
     private $file_name;
     private $file_path;
@@ -14,7 +18,7 @@ class asterisk implements Iasterisk
     private $dotenv;
 
     //config with default vars
-    private $min_confidence = 80;
+    private $min_confidence = 0.80;
     private $message_not_understand = 'Desculpe, não consegui te endender, poderia repetir?';
 
     /**
@@ -34,7 +38,7 @@ class asterisk implements Iasterisk
         $this->curl = new Curl();
 
         //load .env file
-        $this->dotenv = new Dotenv\Dotenv(__DIR__);
+        $this->dotenv = new Dotenv\Dotenv(__DIR__ . "/../");
         $this->dotenv->load();
     }
 
@@ -58,18 +62,37 @@ class asterisk implements Iasterisk
     public function control()
     {
 
+        $time_start = microtime(true);
+
         //translate audio to text
         $message = $this->speechToText( $this->file_path );
+
+        $time_end = microtime(true);
+
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
+
+        $time_start = microtime(true);
 
         if($message['status'] == 1){
 
             //send text to astrid-api
             $astrid_answer = $this->callAstrid($message['transcript']);
 
+            $time_end = microtime(true);
+
+            $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
+
+            $time_start = microtime(true);
+
             //translate text to audio
             $ret['transcript'] = $this->textToSpeech( $astrid_answer );
 
 
+            $time_end = microtime(true);
+
+
+            $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
 
         }else{
 
@@ -130,9 +153,12 @@ class asterisk implements Iasterisk
      * @param $message
      * @return string
      */
-    private function callAstrid($message)
+    public function callAstrid($message)
     {
-        $ret = ""; //call astrid
+        //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
+        echo Dialogflow::detectIntentTexts('astrid-5a294',$message, '1');
+
+        $ret = "";
         return $ret;
     }
 
@@ -144,7 +170,7 @@ class asterisk implements Iasterisk
      * @return array
      *
      */
-    private function textToSpeech($message)
+    public function textToSpeech($message)
     {
 
         $this->curl->get( getenv("TRANSLATE-API-URL") . '/text-to-speech', array(
@@ -173,7 +199,7 @@ class asterisk implements Iasterisk
      * @return array
      *
      */
-    private function speechToText($audio_path)
+    public function speechToText($audio_path)
     {
 
         $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
@@ -181,14 +207,17 @@ class asterisk implements Iasterisk
         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
+
         if ($this->curl->error) {
             
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
             $ret['status'] = 0;
 
+
+
         }else{
 
-            $ret = $this->curl->response;
+            $ret = get_object_vars($this->curl->response);
 
             if($ret['confidence'] >= $this->min_confidence ){
 
