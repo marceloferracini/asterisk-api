@@ -9,14 +9,19 @@
     main($argv);
 */
 
-error_reporting(0);
+/*
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+*/
 
-include "asterisk.php";
+include "Jobs/Asterisk.php";
 
 function main($array_files){
 
-    $asterisk = new asterisk($array_files);
+    $asterisk = new Asterisk($array_files);
     return $asterisk->control();
 }
+//main(array('../teste.wav', '../teste.wav', '../teste.wav'));
 
 ?>

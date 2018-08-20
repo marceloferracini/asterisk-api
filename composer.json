@@ -1,5 +1,8 @@
 {
   "require": {
-    "d4rkstar/phpagi": "dev-master"
+    "d4rkstar/phpagi": "dev-master",
+    "php-curl-class/php-curl-class": "*",
+    "vlucas/phpdotenv": "*",
+    "google/cloud-dialogflow": "*"
   }
 }
