@@ -102,7 +102,8 @@ class Asterisk implements IAsterisk
 
         echo "\n";
 
-        $this->agi->set_variable("resposta", $ret['transcript'] . " " . $ret['fileName']);
+        $this->agi->set_variable("respostaUrl", $ret['transcript'] );
+        $this->agi->set_variable("respostaFileName", $ret['fileName'] );
 
         return 1;
 
