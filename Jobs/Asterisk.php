@@ -118,9 +118,8 @@ class Asterisk implements IAsterisk
     public function callAstrid($message)
     {
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
-        echo Dialogflow::detectIntentTexts('astrid-5a294',$message, '1');
+        $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, '1');
 
-        $ret = "";
         return $ret;
     }
 
