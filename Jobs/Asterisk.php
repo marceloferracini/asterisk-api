@@ -100,48 +100,9 @@ class Asterisk implements IAsterisk
 
         }
 
-        /*
-
-                echo  print_r($this->textToSpeech('isto é um teste'),true);
-
-                echo "<hr>";
-
-                echo $this->speechToText('/var/www/html/teste.wav');
-
-
-                //set retorno to asterisk
-
-                ob_start("xxx");
-
-                echo "\n";
-
-                $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_name);
-
-                echo "\n";
-
-                $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_path);
-
-                echo "\n";
-
-                $url = system("curl http://www.meupro.com.br/teste.php \n");
-
-                //$filename = substr($url, strripos($url,"/"), strlen($url) );
-
-
-                system("wget " . $url . " -O /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
-
-                system("chmod 777 /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
-
-
-                $resposta = $this->file_name;
-
-
-                ob_end_flush();
-
-        */
         echo "\n";
 
-        $this->agi->set_variable("resposta", $ret['transcript']);
+        $this->agi->set_variable("resposta", $ret['transcript'] . " " . $ret['fileName']);
 
         return 1;
 
@@ -184,6 +145,7 @@ class Asterisk implements IAsterisk
         }else{
 
             $ret['transcript'] = $this->curl->response;
+            $ret['fileName'] =  substr($ret['transcript'], stripos($ret['transcript'], '/')+1);
             $ret['status'] = 1;
         }
         
@@ -204,9 +166,18 @@ class Asterisk implements IAsterisk
 
         $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
         $this->curl->setHeader('Content-Type', 'multipart/form-data');
+
         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
+
+ /*
+        $this->curl->post( 'http://www.meupro.com.br/teste.php', array(
+            "audio" => "@" .  $audio_path,
+        ));
+*/
+
+        $this->agi->exec("NOOP", "realpath\ " . print_r($this->curl, true));
 
         if ($this->curl->error) {
             
@@ -230,6 +201,9 @@ class Asterisk implements IAsterisk
 
             }
         }
+
+        $this->agi->exec("NOOP", "ret\ " . print_r($ret, true));
+
 
         return $ret;
 
