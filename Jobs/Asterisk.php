@@ -145,7 +145,7 @@ class Asterisk implements IAsterisk
         }else{
 
             $ret['transcript'] = $this->curl->response;
-            $ret['fileName'] =  substr($ret['transcript'], stripos($ret['transcript'], '/')+1);
+            $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
             $ret['status'] = 1;
         }
         
