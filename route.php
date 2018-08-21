@@ -11,14 +11,14 @@
  *
 
 exten => 123,n,agi(asterisk-api/route.php,speechToText,${pergunta},${CALLERID(num)})
-exten => 123,n,Playback(${resposta})
+exten => 123,n,NoOP(O usuario falou:  ${resposta})
 
 exten => 123,n,agi(asterisk-api/route.php,default,${pergunta},${CALLERID(num)})
 exten => 123,n,NoOP(VOLTOU ESTA INFO DO ARQUIVO PHP ${resposta})
 exten => 123,n,Playback(${resposta})
 
-exten => 123,n,agi(asterisk-api/route.php,textToSpeech,teste de traduçao)
-exten => 123,n,NoOP(O usuario falou:  ${resposta})
+exten => 123,n,agi(asterisk-api/route.php,textToSpeech,teste de traducao)
+exten => 123,n,Playback(${resposta})
 
  * // use example in cli
  * //main(array('/tmp/2001', '/tmp/2001', '/tmp/2001'));
