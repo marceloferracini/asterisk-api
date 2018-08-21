@@ -7,8 +7,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use \Curl\Curl;
 
-
-
 class Asterisk implements IAsterisk
 {
     private $file_name;
@@ -62,22 +60,17 @@ class Asterisk implements IAsterisk
     public function control()
     {
 
-
-//	$this->agi->exec("NOOP", "ret\ " .  $this->file_path );
-
         $time_start = microtime(true);
 
         //translate audio to text
         $message = $this->speechToText( $this->file_path . ".wav");
 
-
-	$this->agi->exec("NOOP", "Message\ " . $message['transcript'] );
-
+	    $this->agi->exec("NOOP", "Message\ " . $message['transcript'] );
 
         $time_end = microtime(true);
 
-
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
+
 
         $time_start = microtime(true);
 
@@ -88,18 +81,21 @@ class Asterisk implements IAsterisk
 
             $time_end = microtime(true);
 
-	    $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+	        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
 
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
             $time_start = microtime(true);
 
+
+            //to avoid null answers
+            if(!$astrid_answer)
+                $astrid_answer = $this->message_not_understand;
+
             //translate text to audio
             $ret = $this->textToSpeech( $astrid_answer );
 
-
             $time_end = microtime(true);
-
 
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
 
@@ -109,11 +105,82 @@ class Asterisk implements IAsterisk
 
         }
 
-        $ret['localFile'] = $this->ConvertFileToAsterisk($ret['transcript'], $ret['fileName']);
+        $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
         echo "\n";
 
         $this->agi->set_variable("resposta", $ret['localFile'] );
+
+        return 1;
+
+    }
+
+    /**
+     * This function will receive a string and return the audio in Asterisk format
+     * in case of error will return a default audio message
+     *
+     * @param string $message
+     * @return string
+     */
+    public function extTextToSpeech($message)
+    {
+
+        $time_start = microtime(true);
+
+        //translate text to audio
+        $ret = $this->textToSpeech( $message );
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
+
+
+        $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+        echo "\n";
+
+        $this->agi->set_variable("resposta", $ret['localFile'] );
+
+        return 1;
+
+    }
+    
+    /**
+     * This function will receive a audio file and return the text of the audio, 
+     * in case of error will return a default message
+     *
+     * @return string
+     */
+    public function extSpeechToText()
+    {
+
+        $time_start = microtime(true);
+
+        //translate audio to text
+        $message = $this->speechToText( $this->file_path . ".wav");
+
+        $this->agi->exec("NOOP", "Message\ " . $message['transcript'] );
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
+
+
+        $time_start = microtime(true);
+
+        if($message['status'] == 1){
+
+            $ret = $message['transcript'];
+
+        }else{
+
+            $ret = $this->message_not_understand;
+
+        }
+
+        echo "\n";
+
+        $this->agi->set_variable("resposta", $ret);
 
         return 1;
 
@@ -180,13 +247,6 @@ class Asterisk implements IAsterisk
         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
-
- /*
-        $this->curl->post( 'http://www.meupro.com.br/teste.php', array(
-            "audio" => "@" .  $audio_path,
-        ));
-*/
-
         if ($this->curl->error) {
             
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
@@ -212,8 +272,15 @@ class Asterisk implements IAsterisk
 
     }
 
-
-    public function ConvertFileToAsterisk($s3Url, $fileName)
+    /**
+     * This function convert the mp3 audio file to wav with 8000 hz audio file
+     *
+     * @param string $s3Url
+     * @param string $fileName
+     *
+     * @return mixed
+     */
+    public function convertFileToAsterisk($s3Url, $fileName)
     {
 
         $audio = file_get_contents($s3Url);
