@@ -37,4 +37,7 @@ interface IAsterisk
      */
     public function textToSpeech($message);
 
+
+    public function ConvertFileToAsterisk($s3Url, $fileName);
+
 }

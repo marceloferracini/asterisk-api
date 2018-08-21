@@ -109,13 +109,11 @@ class Asterisk implements IAsterisk
 
         }
 
+        $ret['localFile'] = $this->ConvertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
         echo "\n";
 
-        $this->agi->set_variable("respostaUrl", $ret['transcript'] );
-
-	echo "\n";
-
-        $this->agi->set_variable("respostaFileName", $ret['fileName'] );
+        $this->agi->set_variable("resposta", $ret['localFile'] );
 
         return 1;
 
@@ -214,4 +212,20 @@ class Asterisk implements IAsterisk
 
     }
 
+
+    public function ConvertFileToAsterisk($s3Url, $fileName)
+    {
+
+        $audio = file_get_contents($s3Url);
+
+        //save file on /tmp
+        file_put_contents("/tmp/" . $fileName, $audio);
+
+        $FileNameWithOutExt = substr($fileName, 0, strpos($fileName, '.')-1);
+
+        system("lame --decode /tmp/$fileName - | sox -v 0.5 -t wav - -t wav -b 16 -r 8000 -c 1 $FileNameWithOutExt.wav");
+
+        return "/tmp/" . $FileNameWithOutExt;
+
+    }
 }
