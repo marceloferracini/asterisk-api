@@ -22,7 +22,7 @@ function main($array_files){
     $asterisk = new Asterisk($array_files);
     return $asterisk->control();
 }
-//main(array('/tmp/2001.wav', '/tmp/2001.wav', '/tmp/2001.wav'));
+//main(array('/tmp/2001', '/tmp/2001', '/tmp/2001'));
 
 //main(array('/Users/leandro/Desktop/teste.wav', '/Users/leandro/Desktop/teste.wav', '/Users/leandro/Desktop/teste.wav'));
 
