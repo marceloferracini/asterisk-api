@@ -221,7 +221,7 @@ class Asterisk implements IAsterisk
         //save file on /tmp
         file_put_contents("/tmp/" . $fileName, $audio);
 
-        $FileNameWithOutExt = substr($fileName, 0, strpos($fileName, '.')-1);
+        $FileNameWithOutExt = substr($fileName, 0, strpos($fileName, '.'));
 
         system("lame --decode /tmp/$fileName - | sox -v 0.5 -t wav - -t wav -b 16 -r 8000 -c 1 $FileNameWithOutExt.wav");
 
