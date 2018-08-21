@@ -60,6 +60,8 @@ class Asterisk implements IAsterisk
     public function control()
     {
 
+        $this->agi->exec("NOOP", "control\ ");
+
         $time_start = microtime(true);
 
         //translate audio to text
@@ -125,6 +127,8 @@ class Asterisk implements IAsterisk
     public function extTextToSpeech($message)
     {
 
+        $this->agi->exec("NOOP", "extTextToSpeech\ ");
+
         $time_start = microtime(true);
 
         //translate text to audio
@@ -154,6 +158,8 @@ class Asterisk implements IAsterisk
     public function extSpeechToText()
     {
 
+        $this->agi->exec("NOOP", "extSpeechToText\ ");
+        
         $time_start = microtime(true);
 
         //translate audio to text
