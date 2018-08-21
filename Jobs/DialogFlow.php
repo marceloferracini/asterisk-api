@@ -27,7 +27,7 @@ abstract class DialogFlow
     public static function detectIntentTexts($projectId, $text, $sessionId, $languageCode = 'pt-BR')
     {
         // new session
-        $key = array('credentials' => 'Storage/google_key.json');
+        $key = array('credentials' => '/var/lib/asterisk/agi-bin/asterisk-api/Storage/google_key.json');
         $sessionsClient = new SessionsClient($key);
         $session = $sessionsClient->sessionName($projectId, $sessionId ?: uniqid());
         printf('Session path: %s' . PHP_EOL, $session);

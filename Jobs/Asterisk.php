@@ -62,10 +62,17 @@ class Asterisk implements IAsterisk
     public function control()
     {
 
+
+//	$this->agi->exec("NOOP", "ret\ " .  $this->file_path );
+
         $time_start = microtime(true);
 
         //translate audio to text
-        $message = $this->speechToText( $this->file_path );
+        $message = $this->speechToText( $this->file_path . ".wav");
+
+
+	$this->agi->exec("NOOP", "Message\ " . $message['transcript'] );
+
 
         $time_end = microtime(true);
 
@@ -81,12 +88,14 @@ class Asterisk implements IAsterisk
 
             $time_end = microtime(true);
 
+	    $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
             $time_start = microtime(true);
 
             //translate text to audio
-            $ret['transcript'] = $this->textToSpeech( $astrid_answer );
+            $ret = $this->textToSpeech( $astrid_answer );
 
 
             $time_end = microtime(true);
@@ -103,6 +112,9 @@ class Asterisk implements IAsterisk
         echo "\n";
 
         $this->agi->set_variable("respostaUrl", $ret['transcript'] );
+
+	echo "\n";
+
         $this->agi->set_variable("respostaFileName", $ret['fileName'] );
 
         return 1;
@@ -177,14 +189,10 @@ class Asterisk implements IAsterisk
         ));
 */
 
-        $this->agi->exec("NOOP", "realpath\ " . print_r($this->curl, true));
-
         if ($this->curl->error) {
             
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
             $ret['status'] = 0;
-
-
 
         }else{
 
@@ -201,9 +209,6 @@ class Asterisk implements IAsterisk
 
             }
         }
-
-        $this->agi->exec("NOOP", "ret\ " . print_r($ret, true));
-
 
         return $ret;
 
