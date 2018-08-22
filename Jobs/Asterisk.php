@@ -126,38 +126,35 @@ class Asterisk implements IAsterisk
     public function callIntenction($message = 'Começar')
     {
 
+        $this->agi->exec("NOOP", "callIntenction\ ");
+
         $time_start = microtime(true);
 
-        if($message['status'] == 1){
 
-            //send text to astrid-api
-            $astrid_answer = $this->callAstrid($message);
+        //send text to astrid-api
+        $astrid_answer = $this->callAstrid($message);
 
-            $time_end = microtime(true);
+        $time_end = microtime(true);
 
-            $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
 
-            $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
-            $time_start = microtime(true);
+        $time_start = microtime(true);
 
 
-            //to avoid null answers
-            if(!$astrid_answer)
-                $astrid_answer = $this->message_not_understand;
+        //to avoid null answers
+        if(!$astrid_answer)
+            $astrid_answer = $this->message_not_understand;
 
-            //translate text to audio
-            $ret = $this->textToSpeech( $astrid_answer );
+        //translate text to audio
+        $ret = $this->textToSpeech( $astrid_answer );
 
-            $time_end = microtime(true);
+        $time_end = microtime(true);
 
-            $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
 
-        }else{
 
-            $ret = $this->textToSpeech( $this->message_not_understand );
-
-        }
 
         $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
