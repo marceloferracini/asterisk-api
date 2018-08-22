@@ -118,6 +118,58 @@ class Asterisk implements IAsterisk
     }
 
     /**
+     * This function control the comunication between Asterisk and Astrid
+     *
+     * @param string $message
+     * @return int|mixed
+     */
+    public function callIntenction($message = 'Começar')
+    {
+
+        $time_start = microtime(true);
+
+        if($message['status'] == 1){
+
+            //send text to astrid-api
+            $astrid_answer = $this->callAstrid($message);
+
+            $time_end = microtime(true);
+
+            $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+
+            $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
+
+            $time_start = microtime(true);
+
+
+            //to avoid null answers
+            if(!$astrid_answer)
+                $astrid_answer = $this->message_not_understand;
+
+            //translate text to audio
+            $ret = $this->textToSpeech( $astrid_answer );
+
+            $time_end = microtime(true);
+
+            $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
+
+        }else{
+
+            $ret = $this->textToSpeech( $this->message_not_understand );
+
+        }
+
+        $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+        echo "\n";
+
+        $this->agi->set_variable("resposta", $ret['localFile'] );
+
+        return 1;
+
+    }
+
+    /**
      * This function will receive a string and return the audio in Asterisk format
      * in case of error will return a default audio message
      *

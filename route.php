@@ -17,7 +17,10 @@ exten => 123,n,agi(asterisk-api/route.php,default,${pergunta},${CALLERID(num)})
 exten => 123,n,NoOP(VOLTOU ESTA INFO DO ARQUIVO PHP ${resposta})
 exten => 123,n,Playback(${resposta})
 
-exten => 123,n,agi(asterisk-api/route.php,textToSpeech,teste de traducao)
+exten => 123,n,agi(asterisk-api/route.php,textToSpeech,"Teste de tradução")
+exten => 123,n,Playback(${resposta})
+
+exten => 123,n,agi(asterisk-api/route.php,callIntenction,"Começar")
 exten => 123,n,Playback(${resposta})
 
  * // use example in cli
@@ -40,10 +43,13 @@ function main($arrayArgv){
     switch($arrayArgv[0]){
 
         case 'textToSpeech':
-            return $asterisk->extTextToSpeech($arrayArgv[1]);
+            return $asterisk->extTextToSpeech( $arrayArgv[1] );
 
         case 'speechToText':
             return $asterisk->extSpeechToText();
+
+        case 'callIntenction':
+            return $asterisk->callIntenction( $arrayArgv[1] );
         
         default:
             return $asterisk->control();

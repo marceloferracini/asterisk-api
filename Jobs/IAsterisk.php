@@ -57,4 +57,10 @@ interface IAsterisk
      */
     public function extTextToSpeech($message);
 
+    /**
+     * @param string $message
+     * @return mixed
+     */
+    public function callIntenction($message = 'Começar');
+
 }
