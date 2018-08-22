@@ -37,4 +37,30 @@ interface IAsterisk
      */
     public function textToSpeech($message);
 
+    /**
+     * @param string $s3Url
+     * @param string $fileName
+     * @return mixed
+     */
+    public function convertFileToAsterisk($s3Url, $fileName);
+
+    /**
+     *
+     * @return string
+     */
+    public function extSpeechToText();
+
+    /**
+     *
+     * @param string $message
+     * @return string
+     */
+    public function extTextToSpeech($message);
+
+    /**
+     * @param string $message
+     * @return mixed
+     */
+    public function callIntenction($message = 'Começar');
+
 }

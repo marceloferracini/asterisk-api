@@ -7,8 +7,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use \Curl\Curl;
 
-
-
 class Asterisk implements IAsterisk
 {
     private $file_name;
@@ -62,15 +60,19 @@ class Asterisk implements IAsterisk
     public function control()
     {
 
+        $this->agi->exec("NOOP", "control\ ");
+
         $time_start = microtime(true);
 
         //translate audio to text
-        $message = $this->speechToText( $this->file_path );
+        $message = $this->speechToText( $this->file_path . ".wav");
+
+	    $this->agi->exec("NOOP", "Message\ " . $message['transcript'] );
 
         $time_end = microtime(true);
 
-
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
+
 
         $time_start = microtime(true);
 
@@ -81,16 +83,21 @@ class Asterisk implements IAsterisk
 
             $time_end = microtime(true);
 
+	        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
             $time_start = microtime(true);
 
-            //translate text to audio
-            $ret['transcript'] = $this->textToSpeech( $astrid_answer );
 
+            //to avoid null answers
+            if(!$astrid_answer)
+                $astrid_answer = $this->message_not_understand;
+
+            //translate text to audio
+            $ret = $this->textToSpeech( $astrid_answer );
 
             $time_end = microtime(true);
-
 
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
 
@@ -100,48 +107,135 @@ class Asterisk implements IAsterisk
 
         }
 
-        /*
+        $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
-                echo  print_r($this->textToSpeech('isto é um teste'),true);
-
-                echo "<hr>";
-
-                echo $this->speechToText('/var/www/html/teste.wav');
-
-
-                //set retorno to asterisk
-
-                ob_start("xxx");
-
-                echo "\n";
-
-                $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_name);
-
-                echo "\n";
-
-                $this->agi->exec("NOOP", "VALOR\ recebido:\ " .  $this->file_path);
-
-                echo "\n";
-
-                $url = system("curl http://www.meupro.com.br/teste.php \n");
-
-                //$filename = substr($url, strripos($url,"/"), strlen($url) );
-
-
-                system("wget " . $url . " -O /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
-
-                system("chmod 777 /var/lib/asterisk/sounds/" .  $this->file_name . ".wav");
-
-
-                $resposta = $this->file_name;
-
-
-                ob_end_flush();
-
-        */
         echo "\n";
 
-        $this->agi->set_variable("resposta", $ret['transcript']);
+        $this->agi->set_variable("resposta", $ret['localFile'] );
+
+        return 1;
+
+    }
+
+    /**
+     * This function control the comunication between Asterisk and Astrid
+     *
+     * @param string $message
+     * @return int|mixed
+     */
+    public function callIntenction($message = 'Começar')
+    {
+
+        $this->agi->exec("NOOP", "callIntenction\ ");
+
+        $time_start = microtime(true);
+
+
+        //send text to astrid-api
+        $astrid_answer = $this->callAstrid($message);
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
+
+        $time_start = microtime(true);
+
+
+        //to avoid null answers
+        if(!$astrid_answer)
+            $astrid_answer = $this->message_not_understand;
+
+        //translate text to audio
+        $ret = $this->textToSpeech( $astrid_answer );
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
+
+
+
+        $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+        echo "\n";
+
+        $this->agi->set_variable("resposta", $ret['localFile'] );
+
+        return 1;
+
+    }
+
+    /**
+     * This function will receive a string and return the audio in Asterisk format
+     * in case of error will return a default audio message
+     *
+     * @param string $message
+     * @return string
+     */
+    public function extTextToSpeech($message)
+    {
+
+        $this->agi->exec("NOOP", "extTextToSpeech\ ");
+
+        $time_start = microtime(true);
+
+        //translate text to audio
+        $ret = $this->textToSpeech( $message );
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
+
+
+        $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+        echo "\n";
+
+        $this->agi->set_variable("resposta", $ret['localFile'] );
+
+        return 1;
+
+    }
+    
+    /**
+     * This function will receive a audio file and return the text of the audio, 
+     * in case of error will return a default message
+     *
+     * @return string
+     */
+    public function extSpeechToText()
+    {
+
+        $this->agi->exec("NOOP", "extSpeechToText\ ");
+        
+        $time_start = microtime(true);
+
+        //translate audio to text
+        $message = $this->speechToText( $this->file_path . ".wav");
+
+        $this->agi->exec("NOOP", "Message\ " . $message['transcript'] );
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
+
+
+        $time_start = microtime(true);
+
+        if($message['status'] == 1){
+
+            $ret = $message['transcript'];
+
+        }else{
+
+            $ret = $this->message_not_understand;
+
+        }
+
+        echo "\n";
+
+        $this->agi->set_variable("resposta", $ret);
 
         return 1;
 
@@ -156,9 +250,8 @@ class Asterisk implements IAsterisk
     public function callAstrid($message)
     {
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
-        echo Dialogflow::detectIntentTexts('astrid-5a294',$message, '1');
+        $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, '1');
 
-        $ret = "";
         return $ret;
     }
 
@@ -184,6 +277,7 @@ class Asterisk implements IAsterisk
         }else{
 
             $ret['transcript'] = $this->curl->response;
+            $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
             $ret['status'] = 1;
         }
         
@@ -204,16 +298,14 @@ class Asterisk implements IAsterisk
 
         $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
         $this->curl->setHeader('Content-Type', 'multipart/form-data');
+
         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
-
         if ($this->curl->error) {
             
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
             $ret['status'] = 0;
-
-
 
         }else{
 
@@ -235,4 +327,27 @@ class Asterisk implements IAsterisk
 
     }
 
+    /**
+     * This function convert the mp3 audio file to wav with 8000 hz audio file
+     *
+     * @param string $s3Url
+     * @param string $fileName
+     *
+     * @return mixed
+     */
+    public function convertFileToAsterisk($s3Url, $fileName)
+    {
+
+        $audio = file_get_contents($s3Url);
+
+        //save file on /tmp
+        file_put_contents("/tmp/" . $fileName, $audio);
+
+        $FileNameWithOutExt = substr($fileName, 0, strpos($fileName, '.'));
+
+        system("lame --decode /tmp/$fileName - | sox -v 0.5 -t wav - -t wav -b 16 -r 8000 -c 1 $FileNameWithOutExt.wav");
+
+        return "/tmp/" . $FileNameWithOutExt;
+
+    }
 }
