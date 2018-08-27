@@ -2,8 +2,8 @@
 
 include "IAsterisk.php";
 include "DialogFlow.php";
-
 require __DIR__ . '/../vendor/autoload.php';
+
 
 use \Curl\Curl;
 
@@ -29,8 +29,10 @@ class Asterisk implements IAsterisk
         $this->file_path = $array_file[1];
         $this->file_name = $array_file[2];
 
-        // creating AGI object
-        $this->agi = new AGI();
+        //to exec the api by cli without Asterisk
+        if($array_file[0] != 'config')
+            // creating AGI object
+            $this->agi = new AGI();
 
         // creating curl object
         $this->curl = new Curl();
@@ -49,6 +51,17 @@ class Asterisk implements IAsterisk
     {
 
         $this->curl->close();
+
+    }
+
+    /**
+     * create all tables
+     */
+    public function setupDB()
+    {
+
+        //put here all table files, like migrations on Laravel
+        require_once "database/defaultMessages.php";
 
     }
 

@@ -15,6 +15,11 @@ interface IAsterisk
     public function __destruct();
 
     /**
+     * create all tables
+     */
+    public function setupDB();
+
+    /**
      * @return mixed
      */
     public function control();
