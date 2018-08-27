@@ -17,7 +17,7 @@ class Asterisk implements IAsterisk
 
     //config with default vars
     private $min_confidence = 0.80;
-    private $message_not_understand = 'Desculpe, não consegui te endender, poderia repetir?';
+    private $message_not_understand = 'not_understand';
 
     /**
      * asterisk constructor.
@@ -103,7 +103,8 @@ class Asterisk implements IAsterisk
 
         }else{
 
-            $ret = $this->textToSpeech( $this->message_not_understand );
+            //$ret = $this->textToSpeech( $this->message_not_understand );
+	    $ret = $this->message_not_understand;
 
         }
 
@@ -183,12 +184,19 @@ class Asterisk implements IAsterisk
         //translate text to audio
         $ret = $this->textToSpeech( $message );
 
+
+ 	$this->agi->exec("NOOP", "extTextToSpeech\ " . $message );
+        $this->agi->exec("NOOP", "extTextToSpeech\ " . $ret['transcript'] );
+
+
         $time_end = microtime(true);
 
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
 
 
         $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+	$this->agi->exec("NOOP", "extTextToSpeech\ ". $ret['localFile']);
 
         echo "\n";
 
@@ -266,12 +274,14 @@ class Asterisk implements IAsterisk
     public function textToSpeech($message)
     {
 
+	$this->agi->exec("NOOP", "extTextToSpeech\ " . $message);
+
         $this->curl->get( getenv("TRANSLATE-API-URL") . '/text-to-speech', array(
                                                                             "message" => $message,       
                                                                            ));
         if ($this->curl->error) {
             
-            $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
+            $ret['transcript'] = 'Error:\ ' . $this->curl->errorCode . '\: ' . $this->curl->errorMessage . "\ \n";
             $ret['status'] = 0;
 
         }else{
@@ -345,7 +355,7 @@ class Asterisk implements IAsterisk
 
         $FileNameWithOutExt = substr($fileName, 0, strpos($fileName, '.'));
 
-        system("lame --decode /tmp/$fileName - | sox -v 0.5 -t wav - -t wav -b 16 -r 8000 -c 1 $FileNameWithOutExt.wav");
+        system("lame --decode /tmp/$fileName - | sox -v 0.5 -t wav - -t wav -b 16 -r 8000 -c 1 /tmp/$FileNameWithOutExt.wav");
 
         return "/tmp/" . $FileNameWithOutExt;
 
