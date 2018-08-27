@@ -92,10 +92,11 @@ class Asterisk implements IAsterisk
 
 	    echo "\n";
 	
-            //to avoid null answers
+            //to avoid not understand answers 
             if($astrid_answer == 'Desculpe, mas não consegui te entender'){
 		
 		$this->agi->set_variable("not_understand", 1 );
+		return 1;
 
 	    }else{
 
