@@ -83,16 +83,27 @@ class Asterisk implements IAsterisk
 
             $time_end = microtime(true);
 
-	        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+	    $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
 
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
             $time_start = microtime(true);
 
 
+	    echo "\n";
+	
             //to avoid null answers
-            if(!$astrid_answer)
-                $astrid_answer = $this->message_not_understand;
+            if($astrid_answer == 'Desculpe, mas não consegui te entender'){
+		
+		$this->agi->set_variable("not_understand", 1 );
+
+	    }else{
+
+		$this->agi->set_variable("not_understand", 0 );
+
+	    }
+		
+	    echo "\n";
 
             //translate text to audio
             $ret = $this->textToSpeech( $astrid_answer );
@@ -104,7 +115,7 @@ class Asterisk implements IAsterisk
         }else{
 
             //$ret = $this->textToSpeech( $this->message_not_understand );
-	    $ret = $this->message_not_understand;
+	    $ret['localFile'] = $this->message_not_understand;
 
         }
 
