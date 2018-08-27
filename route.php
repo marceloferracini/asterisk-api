@@ -50,6 +50,10 @@ function main($arrayArgv){
             echo $asterisk->setupDB();
             break;
 
+        case 'getDefaultMessages':
+            echo $asterisk->getDefaultMessages();
+            break;
+
         case 'textToSpeech':
             return $asterisk->extTextToSpeech( $arrayArgv[1] );
 

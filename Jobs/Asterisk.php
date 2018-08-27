@@ -2,6 +2,7 @@
 
 include "IAsterisk.php";
 include "DialogFlow.php";
+include "bootstrap.php";
 require __DIR__ . '/../vendor/autoload.php';
 
 
@@ -63,6 +64,19 @@ class Asterisk implements IAsterisk
         //put here all table files, like migrations on Laravel
         require_once "database/defaultMessages.php";
 
+    }
+
+    public function getDefaultMessages()
+    {
+
+        var_dump( getenv("dbDriver"));
+
+        $teste = DefaultMessagesClass::Create([
+                                                'textName'  => 'aaa',
+                                                'textValue' => 'bbbb',
+                                                ]);
+
+        return $teste;
     }
 
     /**

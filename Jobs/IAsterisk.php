@@ -19,6 +19,9 @@ interface IAsterisk
      */
     public function setupDB();
 
+
+    public function getDefaultMessages();
+
     /**
      * @return mixed
      */

@@ -6,10 +6,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
 
-//load .env file
-//$dotenv = new Dotenv\Dotenv(__DIR__ );
-//$dotenv->load();
-
 $capsule->addConnection([
 
     "driver" => getenv("dbDriver"),
