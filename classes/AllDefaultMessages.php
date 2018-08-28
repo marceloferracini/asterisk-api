@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class DefaultMessagesClass extends Eloquent
+class AllDefaultMessages extends Eloquent
 
 {
 
@@ -14,7 +14,9 @@ class DefaultMessagesClass extends Eloquent
 
     protected $fillable = [
 
-        'textName', 'textvalue'
+        'textName', 'textValue'
 
     ];
+
+    protected $table = "all_default_messages";
 }

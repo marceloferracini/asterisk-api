@@ -2,9 +2,7 @@
 
 include "IAsterisk.php";
 include "DialogFlow.php";
-include "bootstrap.php";
 require __DIR__ . '/../vendor/autoload.php';
-
 
 use \Curl\Curl;
 
@@ -56,27 +54,62 @@ class Asterisk implements IAsterisk
     }
 
     /**
-     * create all tables
+     * create all tables and fill it with the default value
      */
     public function setupDB()
     {
 
         //put here all table files, like migrations on Laravel
-        require_once "database/defaultMessages.php";
+        require_once "database/AllDefaultMessages.php";
+
+        //fill default values
+        $defaults[] = array('textName'  => 'MENS_AGUARDE',
+                            'textValue' => 'Certo, Aguarde só um momentinho que vou verificar');
+        $defaults[] = array('textName'  => 'MENS_NAO_ENTENDI',
+                            'textValue' => 'Nao entendi sua pergunta, poderia repetir?');
+        $defaults[] = array('textName'  => 'MENS_NAO_CONSEGUI_AJUDAR',
+                            'textValue' => 'Infelizmente nao conseguirei te ajudar, entre em contato em horario comercial ou acesse nosso site www.astrocentro.com.br, obrigado');
+        $defaults[] = array('textName'  => 'MENS_DUVIDA',
+                            'textValue' => 'Consegui tirar sua dúvida, diga sim ou não ');
+        $defaults[] = array('textName'  => 'MENS_CONSEGUI_AJUDAR',
+                            'textValue' => 'Fico muito feliz em ter ajudado, caso tenha novas dúvidas nos contate, ficaremos felizes em te atender. Forte abraço!!');
+
+        //store on DB
+        foreach ($defaults as $default)  AllDefaultMessages::Create($default);
 
     }
 
+    /**
+     * set all default messages from DB
+     */
     public function getDefaultMessages()
     {
 
-        var_dump( getenv("dbDriver"));
+        require_once "bootstrap.php";
 
-        $teste = DefaultMessagesClass::Create([
-                                                'textName'  => 'aaa',
-                                                'textValue' => 'bbbb',
-                                                ]);
+        $this->agi->exec("NOOP", "getDefaultMessages\ ");
 
-        return $teste;
+        $time_start = microtime(true);
+
+        foreach (AllDefaultMessages::All() as $message) {
+
+            //translate text to audio
+            $ret = $this->textToSpeech( $message->textValue );
+
+            $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+            $this->agi->exec("NOOP",  $message->textName . "\ ". $ret['localFile']);
+
+            echo "\n";
+
+            $this->agi->set_variable($message->textName, $ret['localFile'] );
+
+        }
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ getDefaultMessages:\ " .  (($time_end - $time_start)) );
+
     }
 
     /**
@@ -224,7 +257,7 @@ class Asterisk implements IAsterisk
         $ret = $this->textToSpeech( $message );
 
 
- 	$this->agi->exec("NOOP", "extTextToSpeech\ " . $message );
+ 	    $this->agi->exec("NOOP", "extTextToSpeech\ " . $message );
         $this->agi->exec("NOOP", "extTextToSpeech\ " . $ret['transcript'] );
 
 
@@ -235,7 +268,7 @@ class Asterisk implements IAsterisk
 
         $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
-	$this->agi->exec("NOOP", "extTextToSpeech\ ". $ret['localFile']);
+	    $this->agi->exec("NOOP", "extTextToSpeech\ ". $ret['localFile']);
 
         echo "\n";
 
@@ -387,14 +420,17 @@ class Asterisk implements IAsterisk
     public function convertFileToAsterisk($s3Url, $fileName)
     {
 
-        $audio = file_get_contents($s3Url);
-
-        //save file on /tmp
-        file_put_contents("/tmp/" . $fileName, $audio);
-
         $FileNameWithOutExt = substr($fileName, 0, strpos($fileName, '.'));
 
-        system("lame --decode /tmp/$fileName - | sox -v 0.5 -t wav - -t wav -b 16 -r 8000 -c 1 /tmp/$FileNameWithOutExt.wav");
+        if(!file_exists("/tmp/" . $FileNameWithOutExt . ".wav" )){
+
+            $audio = file_get_contents($s3Url);
+
+            //save file on /tmp
+            file_put_contents("/tmp/" . $fileName, $audio);
+
+            system("lame --decode /tmp/$fileName - | sox -v 0.5 -t wav - -t wav -b 16 -r 8000 -c 1 /tmp/$FileNameWithOutExt.wav");
+        }
 
         return "/tmp/" . $FileNameWithOutExt;
 
