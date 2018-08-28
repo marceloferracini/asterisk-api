@@ -83,7 +83,7 @@ class Asterisk implements IAsterisk
     public function getDefaultMessages()
     {
 
-        require_once "bootstrap.php";
+        require_once __DIR__ . "/../bootstrap.php";
 
         $this->agi->exec("NOOP", "getDefaultMessages\ ");
 
