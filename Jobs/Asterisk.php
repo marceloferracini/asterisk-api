@@ -344,7 +344,7 @@ class Asterisk implements IAsterisk
     public function textToSpeech($message)
     {
 
-	$this->agi->exec("NOOP", "extTextToSpeech\ " . $message);
+        $this->agi->exec("NOOP", "textToSpeech\ " . $message);
 
         $this->curl->get( getenv("TRANSLATE-API-URL") . '/text-to-speech', array(
                                                                             "message" => $message,       
@@ -360,7 +360,7 @@ class Asterisk implements IAsterisk
             $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
             $ret['status'] = 1;
         }
-        
+
         return $ret;
 
     }
