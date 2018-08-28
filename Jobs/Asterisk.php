@@ -143,28 +143,28 @@ class Asterisk implements IAsterisk
 
             $time_end = microtime(true);
 
-	    $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+	        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
 
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
             $time_start = microtime(true);
 
 
-	    echo "\n";
-	
-            //to avoid not understand answers 
-            if($astrid_answer == 'Desculpe, mas não consegui te entender'){
-		
-		$this->agi->set_variable("not_understand", 1 );
-		return 1;
+            echo "\n";
 
-	    }else{
+            //to avoid not understand answers
+            if($astrid_answer == 'Desculpe, mas não consegui te entender' || !$astrid_answer){
 
-		$this->agi->set_variable("not_understand", 0 );
+                $this->agi->set_variable("not_understand", 1 );
+                return 1;
 
-	    }
-		
-	    echo "\n";
+            }else{
+
+                $this->agi->set_variable("not_understand", 0 );
+
+            }
+
+            echo "\n";
 
             //translate text to audio
             $ret = $this->textToSpeech( $astrid_answer );
