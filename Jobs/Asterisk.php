@@ -28,10 +28,8 @@ class Asterisk implements IAsterisk
         $this->file_path = $array_file[1];
         $this->file_name = $array_file[2];
 
-        //to exec the api by cli without Asterisk
-        if($array_file[0] != 'config')
-            // creating AGI object
-            $this->agi = new AGI();
+        // creating AGI object
+        $this->agi = new AGI();
 
         // creating curl object
         $this->curl = new Curl();
