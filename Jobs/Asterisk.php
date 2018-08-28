@@ -71,6 +71,8 @@ class Asterisk implements IAsterisk
                             'textValue' => 'Consegui tirar sua dúvida, diga sim ou não ');
         $defaults[] = array('textName'  => 'MENS_CONSEGUI_AJUDAR',
                             'textValue' => 'Fico muito feliz em ter ajudado, caso tenha novas dúvidas nos contate, ficaremos felizes em te atender. Forte abraço!!');
+        $defaults[] = array('textName'  => 'MENS_ENTENDI',
+                            'textValue' => 'Entendi, vamos tentar de outra forma então, me diga em poucas palavras o que você precisa');
 
         //store on DB
         foreach ($defaults as $default)  AllDefaultMessages::Create($default);
