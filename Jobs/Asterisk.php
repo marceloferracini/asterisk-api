@@ -175,8 +175,8 @@ class Asterisk implements IAsterisk
 
         }else{
 
-            //$ret = $this->textToSpeech( $this->message_not_understand );
-	    $ret['localFile'] = $this->message_not_understand;
+           $this->agi->set_variable("not_understand", 1 );
+           return 1;
 
         }
 
