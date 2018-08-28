@@ -12,7 +12,9 @@ $capsule->addConnection([
     "host" => getenv("dbHost"),
     "database" => getenv("dbDatabase"),
     "username" => getenv("dbUserName"),
-    "password" => getenv("dbPassword")
+    "password" => getenv("dbPassword"),
+    "charset"   => 'utf8',
+    "collation" => 'utf8_unicode_ci'
 
 ]);
 
