@@ -256,6 +256,88 @@ class Asterisk implements IAsterisk
     }
 
     /**
+     * This function control the yesno case
+     *
+     * @param string $contextName
+     * @return int|mixed
+     */
+    public function yesNo($contextName = '')
+    {
+
+        $this->agi->exec("NOOP", "yesNo\ ");
+
+        $time_start = microtime(true);
+
+        //translate audio to text
+        $message = $this->speechToText( $this->file_path . ".wav");
+
+        $this->agi->exec("NOOP", "Message\ " . $message['transcript'] );
+
+        $time_end = microtime(true);
+
+        $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
+
+        if($message['status'] == 1) {
+
+            $time_start = microtime(true);
+
+            //send text to astrid-api
+            $astrid_answer = $this->callAstrid($message['transcript'], $contextName);
+
+
+            $time_end = microtime(true);
+
+            $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer['text']);
+
+            $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " . (($time_end - $time_start)));
+
+            $time_start = microtime(true);
+
+
+            //to avoid null answers
+            if ($astrid_answer['confidence'] < $min_confidence) {
+
+                $this->agi->set_variable("not_understand", 1);
+                return 1;
+
+            }
+
+
+            //translate text to audio
+            $ret = $this->textToSpeech($astrid_answer['text']);
+
+            $time_end = microtime(true);
+
+            $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " . (($time_end - $time_start)));
+
+
+            $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+            //if exist parameters on DialogFlow, set it to Asterisk
+            if ($astrid_answer['parameters'])
+                foreach ($astrid_answer['parameters'] as $key => $val) {
+
+                    echo "\n";
+                    $this->agi->set_variable($key, $val);
+
+                }
+
+            echo "\n";
+
+            $this->agi->set_variable("resposta", $ret['localFile']);
+
+        }else{
+
+            echo "\n";
+            $this->agi->set_variable("not_understand", 1 );
+
+        }
+
+        return 1;
+
+    }
+
+    /**
      * This function will receive a string and return the audio in Asterisk format
      * in case of error will return a default audio message
      *

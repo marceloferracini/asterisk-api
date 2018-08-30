@@ -75,4 +75,12 @@ interface IAsterisk
      */
     public function callIntenction($message = 'Começar', $contextName = '');
 
+    /**
+     * This function control the yesno case
+     *
+     * @param string $contextName
+     * @return int|mixed
+     */
+    public function yesNo($contextName = '');
+
 }

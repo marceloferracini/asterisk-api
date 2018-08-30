@@ -64,7 +64,7 @@ function main($arrayArgv){
             return $asterisk->callIntenction( $arrayArgv[1]);
 
         case 'yesno':
-            return $asterisk->callIntenction( $arrayArgv[1], 'decisao' );
+            return $asterisk->yesNo( 'decisao' );
 
         default:
             return $asterisk->control();
