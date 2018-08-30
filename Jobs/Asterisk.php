@@ -16,7 +16,6 @@ class Asterisk implements IAsterisk
 
     //config with default vars
     private $min_confidence = 0.80;
-    private $message_not_understand = 'not_understand';
 
     /**
      * asterisk constructor.
@@ -64,7 +63,7 @@ class Asterisk implements IAsterisk
         $defaults[] = array('textName'  => 'MENS_AGUARDE',
                             'textValue' => 'Certo, Aguarde só um momentinho que vou verificar');
         $defaults[] = array('textName'  => 'MENS_NAO_ENTENDI',
-                            'textValue' => 'Nao entendi sua pergunta, poderia repetir?');
+                            'textValue' => 'Não entendi sua pergunta, poderia repetir?');
         $defaults[] = array('textName'  => 'MENS_NAO_CONSEGUI_AJUDAR',
                             'textValue' => 'Infelizmente nao conseguirei te ajudar, entre em contato em horario comercial ou acesse nosso site www.astrocentro.com.br, obrigado');
         $defaults[] = array('textName'  => 'MENS_DUVIDA',
@@ -122,6 +121,8 @@ class Asterisk implements IAsterisk
 
         $this->agi->exec("NOOP", "control\ ");
 
+        $this->agi->exec("Playback", "/tmp/Keyboard");
+
         $time_start = microtime(true);
 
         //translate audio to text
@@ -143,7 +144,7 @@ class Asterisk implements IAsterisk
 
             $time_end = microtime(true);
 
-	        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+	        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer['text'] );
 
             $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
@@ -153,7 +154,7 @@ class Asterisk implements IAsterisk
             echo "\n";
 
             //to avoid not understand answers
-            if($astrid_answer == 'Desculpe, mas não consegui te entender' || !$astrid_answer){
+            if($astrid_answer['text'] == 'Desculpe, mas não consegui te entender' || !$astrid_answer){
 
                 $this->agi->set_variable("not_understand", 1 );
                 return 1;
@@ -167,7 +168,7 @@ class Asterisk implements IAsterisk
             echo "\n";
 
             //translate text to audio
-            $ret = $this->textToSpeech( $astrid_answer );
+            $ret = $this->textToSpeech( $astrid_answer['text'] );
 
             $time_end = microtime(true);
 
@@ -194,9 +195,10 @@ class Asterisk implements IAsterisk
      * This function control the comunication between Asterisk and Astrid
      *
      * @param string $message
+     * @param string $contextName
      * @return int|mixed
      */
-    public function callIntenction($message = 'Começar')
+    public function callIntenction($message = 'Começar', $contextName = '')
     {
 
         $this->agi->exec("NOOP", "callIntenction\ ");
@@ -205,11 +207,12 @@ class Asterisk implements IAsterisk
 
 
         //send text to astrid-api
-        $astrid_answer = $this->callAstrid($message);
+        $astrid_answer = $this->callAstrid($message, $contextName);
+
 
         $time_end = microtime(true);
 
-        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer );
+        $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer['text'] );
 
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ callAstrid:\ " .  (($time_end - $time_start)) );
 
@@ -217,19 +220,32 @@ class Asterisk implements IAsterisk
 
 
         //to avoid null answers
-        if(!$astrid_answer)
-            $astrid_answer = $this->message_not_understand;
+        if($astrid_answer['confidence'] < $min_confidence) {
+
+            $this->agi->set_variable("not_understand", 1);
+            return 1;
+
+        }
+
 
         //translate text to audio
-        $ret = $this->textToSpeech( $astrid_answer );
+        $ret = $this->textToSpeech( $astrid_answer['text'] );
 
         $time_end = microtime(true);
 
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ textToSpeech:\ " .  (($time_end - $time_start)) );
 
 
-
         $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+        //if exist parameters on DialogFlow, set it to Asterisk
+        if($astrid_answer['parameters'])
+            foreach ($astrid_answer['parameters'] as $key => $val) {
+
+                echo "\n";
+                $this->agi->set_variable($key, $val);
+
+            }
 
         echo "\n";
 
@@ -309,7 +325,8 @@ class Asterisk implements IAsterisk
 
         }else{
 
-            $ret = $this->message_not_understand;
+            $this->agi->set_variable("not_understand", 1 );
+            return 1;
 
         }
 
@@ -325,12 +342,15 @@ class Asterisk implements IAsterisk
      * This function will call the Astrid API to get the Dialogflow answer
      *
      * @param $message
-     * @return string
+     * @param string contextName
+     * @return array
      */
-    public function callAstrid($message)
+    public function callAstrid($message, $contextName = "")
     {
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
-        $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, '1');
+        $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, '1', 'pt-BR', $contextName);
+
+        var_dump($ret);
 
         return $ret;
     }

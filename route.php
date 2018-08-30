@@ -61,8 +61,11 @@ function main($arrayArgv){
             return $asterisk->extSpeechToText();
 
         case 'callIntenction':
-            return $asterisk->callIntenction( $arrayArgv[1] );
-        
+            return $asterisk->callIntenction( $arrayArgv[1]);
+
+        case 'yesno':
+            return $asterisk->callIntenction( $arrayArgv[1], 'decisao' );
+
         default:
             return $asterisk->control();
 

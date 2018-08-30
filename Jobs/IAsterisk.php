@@ -31,7 +31,8 @@ interface IAsterisk
 
     /**
      * @param $message
-     * @return mixed
+     * @param string $contextName
+     * @return array
      */
     public function callAstrid($message);
 
@@ -69,8 +70,9 @@ interface IAsterisk
 
     /**
      * @param string $message
+     * @param string $contextName
      * @return mixed
      */
-    public function callIntenction($message = 'Começar');
+    public function callIntenction($message = 'Começar', $contextName = '');
 
 }

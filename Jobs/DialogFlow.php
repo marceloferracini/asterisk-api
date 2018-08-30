@@ -5,6 +5,10 @@ require __DIR__.'/../vendor/autoload.php';
 use Google\Cloud\Dialogflow\V2\SessionsClient;
 use Google\Cloud\Dialogflow\V2\TextInput;
 use Google\Cloud\Dialogflow\V2\QueryInput;
+use Google\Cloud\Dialogflow\V2\QueryParameters;
+use Google\Cloud\Dialogflow\V2\Context;
+use Google\Cloud\Dialogflow\V2\ContextsClient;
+
 
 
 abstract class DialogFlow
@@ -17,6 +21,7 @@ abstract class DialogFlow
      * @param $text
      * @param $sessionId
      * @param string $languageCode
+     * @param string $contextName
      *
      * @return mixed
      *
@@ -24,12 +29,16 @@ abstract class DialogFlow
      * @throws \Google\ApiCore\ValidationException
      */
 
-    public static function detectIntentTexts($projectId, $text, $sessionId, $languageCode = 'pt-BR')
+    public static function detectIntentTexts($projectId, $text, $sessionId, $languageCode = 'pt-BR', $contextName = '')
     {
+
+        $sessionId = 8;
+
         // new session
-        $key = array('credentials' => '/var/lib/asterisk/agi-bin/asterisk-api/Storage/google_key.json');
+        $key = array('credentials' => __DIR__ . '/../Storage/google_key.json');
         $sessionsClient = new SessionsClient($key);
         $session = $sessionsClient->sessionName($projectId, $sessionId ?: uniqid());
+
         printf('Session path: %s' . PHP_EOL, $session);
 
         // create text input
@@ -37,21 +46,104 @@ abstract class DialogFlow
         $textInput->setText($text);
         $textInput->setLanguageCode($languageCode);
 
+        /*
+        $contextsClient = new ContextsClient();
+        try {
+            $formattedParent = $contextsClient->sessionName($projectId, $sessionId);
+            // Iterate through all elements
+            $pagedResponse = $contextsClient->listContexts($formattedParent);
+
+
+            foreach ($pagedResponse->iterateAllElements() as $element) {
+                //var_dump(get_class_methods($element));
+
+                var_dump($element->getName());
+            }
+
+            // OR iterate over pages of elements
+            $pagedResponse = $contextsClient->listContexts($formattedParent);
+            foreach ($pagedResponse->iteratePages() as $page) {
+                foreach ($page as $element) {
+                    // doSomethingWith($element);
+                }
+            }
+        } finally {
+            $contextsClient->close();
+        }
+        */
+
+
+        var_dump($contextName);
+
+        if($contextName){
+
+            $contextsClient = new ContextsClient();
+
+            //context
+            $context[] = new Context();
+            $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
+            $context[0]->setName($formattedName);
+
+            var_dump($formattedName);
+
+            //"projects/astrid-5a294/agent/sessions/$sessionId/contexts/decisao"
+            $context[0]->setLifespanCount(1);
+
+            //Query Parameters
+            $queryParameters['queryParams'] = new QueryParameters();
+            $queryParameters['queryParams']->setContexts($context);
+
+            try {
+                $formattedParent = $contextsClient->sessionName($projectId, $sessionId);
+                // Iterate through all elements
+                $pagedResponse = $contextsClient->listContexts($formattedParent);
+
+
+                foreach ($pagedResponse->iterateAllElements() as $element) {
+                    //var_dump(get_class_methods($element));
+
+                    var_dump($element->getName());
+                }
+
+            } finally {
+                $contextsClient->close();
+            }
+
+        }else{
+
+            $queryParameters = array();
+
+        }
+
+
+
+
+
+
         // create query input
         $queryInput = new QueryInput();
         $queryInput->setText($textInput);
 
+
         // get response and relevant info
-        $response = $sessionsClient->detectIntent($session, $queryInput);
+        $response = $sessionsClient->detectIntent($session, $queryInput, $queryParameters);
+        //$response = $sessionsClient->DetectIntentRequest($session, $queryInput, $queryParameters);
+
+
         $queryResult = $response->getQueryResult();
-        //$queryText = $queryResult->getQueryText();
-        //$intent = $queryResult->getIntent();
-        //$displayName = $intent->getDisplayName();
-        $confidence = $queryResult->getIntentDetectionConfidence();
-        $fulfilmentText = $queryResult->getFulfillmentText();
+
+        //var_dump($queryResult->getOutputContexts());
+        //$queryResult->setOutputContexts($context);
+
+        $queryText = $queryResult->getQueryText();
+        $intent = $queryResult->getIntent();
+        $ret['intentDisplayName'] = $intent->getDisplayName();
+        $ret['confidence'] = $queryResult->getIntentDetectionConfidence();
+        //$fulfilmentText = $queryResult->getFulfillmentText();
 
         $allResponses = $queryResult->getFulfillmentMessages();
 
+        $ret['parameters']  = json_decode($queryResult->getParameters()->serializeToJsonString());
 
         $iterator = $allResponses->getIterator();
 
@@ -67,7 +159,7 @@ abstract class DialogFlow
                 if ($content) {
 
                     $json = json_decode($content->serializeToJsonString());
-                    $ret = $json->speech->text;
+                    $ret['text'] = $json->speech->text;
 
                 }
             }
