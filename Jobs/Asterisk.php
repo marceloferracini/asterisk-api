@@ -264,6 +264,12 @@ class Asterisk implements IAsterisk
     public function yesNo($contextName = '')
     {
 
+	echo "\n";
+        $this->agi->set_variable("not_understand", 0 );
+	echo "\n";
+	$this->agi->set_variable("returnToAsterisk", "");	
+	echo "\n";
+
         $this->agi->exec("NOOP", "yesNo\ ");
 
         $time_start = microtime(true);
@@ -277,15 +283,27 @@ class Asterisk implements IAsterisk
 
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
 
-        if($message['status'] == 1) {
+	$this->agi->exec("NOOP", "Status\ " . $message['status'] );
 
-            $time_start = microtime(true);
+
+	$this->agi->exec("NOOP", "contextName\ " . $contextName );
+
+
+        if($message['status'] == 1) {
+		
+            $this->agi->exec("NOOP", " entrei\ no\ callastrid\ ");
+            
+	    $time_start = microtime(true);
 
             //send text to astrid-api
             $astrid_answer = $this->callAstrid($message['transcript'], $contextName);
 
+		$this->agi->exec("NOOP", "Sai\ do\ AstridAnswer:\ ");
+	
 
             $time_end = microtime(true);
+
+	    echo "\n";
 
             $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer['text']);
 
@@ -295,7 +313,7 @@ class Asterisk implements IAsterisk
 
 
             //to avoid null answers
-            if ($astrid_answer['confidence'] < $min_confidence) {
+            if (!$astrid_answer['text']) {
 
                 $this->agi->set_variable("not_understand", 1);
                 return 1;
@@ -432,8 +450,6 @@ class Asterisk implements IAsterisk
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
         $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, '1', 'pt-BR', $contextName);
 
-        var_dump($ret);
-
         return $ret;
     }
 
@@ -483,10 +499,17 @@ class Asterisk implements IAsterisk
         $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
         $this->curl->setHeader('Content-Type', 'multipart/form-data');
 
+
+	$this->agi->exec("NOOP", "audioPath\ " . $audio_path );
+
         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
-        if ($this->curl->error) {
+        
+
+	$this->agi->exec("NOOP", "confidence\ " . $message['confidence'] );
+
+	if ($this->curl->error) {
             
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
             $ret['status'] = 0;
@@ -506,6 +529,8 @@ class Asterisk implements IAsterisk
 
             }
         }
+
+	$this->agi->exec("NOOP", "transcript\ " . $message['transcript'] );
 
         return $ret;
 

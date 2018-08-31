@@ -74,5 +74,6 @@ function main($arrayArgv){
 
 ob_end_flush();
 main($argv);
+//main(array('', 'yesno', '/tmp/2001', '/tmp/2001'));
 //main(array('','textToSpeech',"Certo, Aguarde só um momentinho que vou verificar"));
 ?>
