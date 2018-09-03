@@ -82,7 +82,7 @@ abstract class DialogFlow
             $context[0]->setName($formattedName);
 
             //"projects/astrid-5a294/agent/sessions/$sessionId/contexts/decisao"
-            $context[0]->setLifespanCount(1);
+            $context[0]->setLifespanCount(2);
 
             //Query Parameters
             $queryParameters['queryParams'] = new QueryParameters();
