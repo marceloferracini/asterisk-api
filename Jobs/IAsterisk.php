@@ -15,6 +15,16 @@ interface IAsterisk
     public function __destruct();
 
     /**
+     * create all tables and fill it with the default value
+     */
+    public function setupDB();
+
+    /**
+     * set all default messages from DB
+     */
+    public function getDefaultMessages();
+
+    /**
      * @return mixed
      */
     public function control();

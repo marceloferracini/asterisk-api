@@ -26,6 +26,10 @@ exten => 123,n,Playback(${resposta})
  * // use example in cli
  * //main(array('/tmp/2001', '/tmp/2001', '/tmp/2001'));
  *
+ *
+ * use the follows command to create the table on DB:
+ * php route.php setupDB
+ *
  * error_reporting(E_ALL);
  * ini_set('display_errors', TRUE);
  * ini_set('display_startup_errors', TRUE);
@@ -41,6 +45,14 @@ function main($arrayArgv){
     $asterisk = new Asterisk( $arrayArgv );
 
     switch($arrayArgv[0]){
+
+        case 'setupDB':
+            echo $asterisk->setupDB();
+            break;
+
+        case 'getDefaultMessages':
+            echo $asterisk->getDefaultMessages();
+            break;
 
         case 'textToSpeech':
             return $asterisk->extTextToSpeech( $arrayArgv[1] );
@@ -59,4 +71,5 @@ function main($arrayArgv){
 
 ob_end_flush();
 main($argv);
+//main(array('','textToSpeech',"Certo, Aguarde só um momentinho que vou verificar"));
 ?>
