@@ -61,8 +61,11 @@ function main($arrayArgv){
             return $asterisk->extSpeechToText();
 
         case 'callIntenction':
-            return $asterisk->callIntenction( $arrayArgv[1] );
-        
+            return $asterisk->callIntenction( $arrayArgv[1]);
+
+        case 'yesno':
+            return $asterisk->yesNo( 'decisao' );
+
         default:
             return $asterisk->control();
 
@@ -71,5 +74,8 @@ function main($arrayArgv){
 
 ob_end_flush();
 main($argv);
+//main(array('', 'getDefaultMessages', 'oi', '/tmp/2001'));
+//main(array('', 'callIntenction', 'oi', '/tmp/2001'));
+//main(array('', 'yesno', '/tmp/2001', '/tmp/2001'));
 //main(array('','textToSpeech',"Certo, Aguarde só um momentinho que vou verificar"));
 ?>

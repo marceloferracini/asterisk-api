@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "99c1143fe60089b077f2319f009efd5d",
@@ -223,20 +223,20 @@
         },
         {
             "name": "google/cloud-dialogflow",
-            "version": "v0.3.3",
+            "version": "v0.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-dialogflow.git",
-                "reference": "9b76b122dddd0892a5d2859bc966ddff6ad55d4b"
+                "reference": "fe4494a032edb7259833f392280c0fa3c7abb7d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-dialogflow/zipball/9b76b122dddd0892a5d2859bc966ddff6ad55d4b",
-                "reference": "9b76b122dddd0892a5d2859bc966ddff6ad55d4b",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-dialogflow/zipball/fe4494a032edb7259833f392280c0fa3c7abb7d4",
+                "reference": "fe4494a032edb7259833f392280c0fa3c7abb7d4",
                 "shasum": ""
             },
             "require": {
-                "google/gax": "^0.36"
+                "google/gax": "^0.37"
             },
             "require-dev": {
                 "google/cloud-core": "^1.23",
@@ -266,24 +266,25 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud Dialogflow Client for PHP",
-            "time": "2018-08-20T17:02:50+00:00"
+            "time": "2018-08-30T15:45:55+00:00"
         },
         {
             "name": "google/gax",
-            "version": "0.36.0",
+            "version": "0.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "9dd3911738aaf61bafd861917820317402cba798"
+                "reference": "2d8b9103f1be3e3ababd8a733beae705d563edf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/9dd3911738aaf61bafd861917820317402cba798",
-                "reference": "9dd3911738aaf61bafd861917820317402cba798",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/2d8b9103f1be3e3ababd8a733beae705d563edf5",
+                "reference": "2d8b9103f1be3e3ababd8a733beae705d563edf5",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "^1.2.0",
+                "google/grpc-gcp": "^0.1.0",
                 "google/protobuf": "^3.5.1",
                 "grpc/grpc": "^1.4",
                 "guzzlehttp/promises": "^1.3",
@@ -293,7 +294,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^4.8.36",
                 "sami/sami": "*",
-                "squizlabs/php_codesniffer": "2.*"
+                "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
             "autoload": {
@@ -318,7 +319,46 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-07-18T21:57:44+00:00"
+            "time": "2018-08-20T19:05:50+00:00"
+        },
+        {
+            "name": "google/grpc-gcp",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GoogleCloudPlatform/grpc-gcp-php.git",
+                "reference": "3cb8c90c333f0c487d7904ea16084ab27854411a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/grpc-gcp-php/zipball/3cb8c90c333f0c487d7904ea16084ab27854411a",
+                "reference": "3cb8c90c333f0c487d7904ea16084ab27854411a",
+                "shasum": ""
+            },
+            "require": {
+                "google/auth": "^1.3",
+                "google/protobuf": "^v3.3.0",
+                "grpc/grpc": "^v1.13.0",
+                "php": ">=5.5.0",
+                "psr/cache": "^1.0.1"
+            },
+            "require-dev": {
+                "google/cloud-spanner": "^1.7",
+                "phpunit/phpunit": "4.8.36"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grpc\\Gcp\\": "src/",
+                    "": "src/generated/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "gRPC GCP library for channel management",
+            "time": "2018-08-24T00:31:06+00:00"
         },
         {
             "name": "google/protobuf",
