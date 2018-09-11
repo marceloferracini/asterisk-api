@@ -180,7 +180,7 @@ class Asterisk implements IAsterisk
             echo "\n";
 
             //not find DialogFlow answer
-            if(isset($astrid_answer['text'])){
+            if(isset($astrid_answer['text']) || $astrid_answer['text'] == ""){
                 $this->agi->exec("NOOP", "DialogFlow\ Nulls\ in\ ");
 
                 $astrid_answer['text'] = AllDefaultMessages::where("textName", "=", "MENS_DEFAULT")->get("textValue");
