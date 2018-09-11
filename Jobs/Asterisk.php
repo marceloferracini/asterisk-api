@@ -183,7 +183,10 @@ class Asterisk implements IAsterisk
             if(isset($astrid_answer['text']) || $astrid_answer['text'] == ""){
                 $this->agi->exec("NOOP", "DialogFlow\ Nulls\ in\ ");
 
-                $astrid_answer['text'] = AllDefaultMessages::where("textName", "=", "MENS_DEFAULT")->get("textValue");
+                $astrid_answer['text'] = AllDefaultMessages::where('textName', '=', 'MENS_DEFAULT')->get(array("textValue"));
+                $astrid_answer['text'] = $astrid_answer['text']->toArray();
+                $astrid_answer['text'] = $astrid_answer['text'][0][textValue];
+                
                  $this->agi->exec("NOOP", "DialogFlow\ Nulls\ " .  $astrid_answer['text'] );
                  echo "\n";
             }
