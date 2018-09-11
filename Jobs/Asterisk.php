@@ -131,6 +131,8 @@ class Asterisk implements IAsterisk
     public function control()
     {
 
+        require_once __DIR__ . "/../bootstrap.php";
+
         $this->agi->exec("NOOP", "control\ ");
 
         $this->agi->exec("Playback", "/tmp/Keyboard");
@@ -186,7 +188,9 @@ class Asterisk implements IAsterisk
                 $astrid_answer['text'] = AllDefaultMessages::where('textName', '=', 'MENS_DEFAULT')->get(array("textValue"));
                 $astrid_answer['text'] = $astrid_answer['text']->toArray();
                 $astrid_answer['text'] = $astrid_answer['text'][0][textValue];
-                
+
+
+
                  $this->agi->exec("NOOP", "DialogFlow\ Nulls\ " .  $astrid_answer['text'] );
                  echo "\n";
             }
