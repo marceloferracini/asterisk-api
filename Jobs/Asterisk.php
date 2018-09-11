@@ -72,6 +72,10 @@ class Asterisk implements IAsterisk
                             'textValue' => 'Fico muito feliz em ter ajudado, caso tenha novas dúvidas nos contate, ficaremos felizes em te atender. Forte abraço!!');
         $defaults[] = array('textName'  => 'MENS_ENTENDI',
                             'textValue' => 'Entendi, vamos tentar de outra forma então, me diga em poucas palavras o que você precisa');
+        $defaults[] = array('textName'  => 'MENS_DEFAULT',
+                            'textValue' => 'Nesse caso não posso ajuda-lo, peço que entre em contato com nosso sac de segunda a sexta-feira em horário comercial.');
+        $defaults[] = array('textName'  => 'MENS_DECISAO',
+                            'textValue' => 'Desculpe, não consegui entender, diga pausadamente, sim ou não');
 
         //store on DB
         foreach ($defaults as $default)  AllDefaultMessages::Create($default);
@@ -174,6 +178,13 @@ class Asterisk implements IAsterisk
             }
 
             echo "\n";
+
+            //not find DialogFlow answer
+            if(!$astrid_answer['text']){
+                $astrid_answer['text'] = AllDefaultMessages::where("textName", "=", "MENS_DEFAULT")->get("textValue");
+                 $this->agi->exec("NOOP", "DialogFlow\ Nulls\ " .  $astrid_answer['text'] );
+                 echo "\n";
+            }
 
             //translate text to audio
             $ret = $this->textToSpeech( $astrid_answer['text'] );
