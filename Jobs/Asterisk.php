@@ -189,10 +189,8 @@ class Asterisk implements IAsterisk
                 $astrid_answer['text'] = $astrid_answer['text']->toArray();
                 $astrid_answer['text'] = $astrid_answer['text'][0][textValue];
 
-
-
-                 $this->agi->exec("NOOP", "DialogFlow\ Nulls\ " .  $astrid_answer['text'] );
-                 echo "\n";
+                $this->agi->exec("NOOP", "DialogFlow\ Nulls\ " .  $astrid_answer['text'] );
+                echo "\n";
             }
 
             //translate text to audio
