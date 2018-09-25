@@ -370,8 +370,8 @@ class Asterisk implements IAsterisk
                     echo "\n";
                     $this->agi->set_variable($key, $val);
 		
-		    if($key == "returnToAsterisk")
-			$yesno = 1;
+        		    if($key == "returnToAsterisk")
+            			$yesno = 1;
 
 
                 }
@@ -379,16 +379,15 @@ class Asterisk implements IAsterisk
 
 	
 	    //check if the Dialog Flow answer is SIM or NAO
-		if($yesno == 0){
+	    /* disabled to allow any answer in yesno case
+    	if($yesno == 0){
 
 		     $this->agi->set_variable("not_understand", 1);
 		     $this->agi->exec("NOOP", "Entrei\ no\ if\ SIM\ NAO\ ");
                	     return 1;
 		
 		}	 	
-
-
-  
+        */
 
             echo "\n";
 
