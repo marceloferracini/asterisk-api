@@ -135,7 +135,7 @@ class Asterisk implements IAsterisk
 
         $this->agi->exec("NOOP", "control\ ");
 
-        $this->agi->exec("Playback", "/tmp/Keyboard");
+        //$this->agi->exec("Playback", "/tmp/Keyboard");
 
         $time_start = microtime(true);
 
