@@ -72,6 +72,10 @@ class Asterisk implements IAsterisk
                             'textValue' => 'Fico muito feliz em ter ajudado, caso tenha novas dúvidas nos contate, ficaremos felizes em te atender. Forte abraço!!');
         $defaults[] = array('textName'  => 'MENS_ENTENDI',
                             'textValue' => 'Entendi, vamos tentar de outra forma então, me diga em poucas palavras o que você precisa');
+        $defaults[] = array('textName'  => 'MENS_DEFAULT',
+                            'textValue' => 'Nesse caso não posso ajuda-lo, peço que entre em contato com nosso sac de segunda a sexta-feira em horário comercial.');
+        $defaults[] = array('textName'  => 'MENS_DECISAO',
+                            'textValue' => 'Desculpe, não consegui entender, diga pausadamente, sim ou não');
 
         //store on DB
         foreach ($defaults as $default)  AllDefaultMessages::Create($default);
@@ -127,9 +131,11 @@ class Asterisk implements IAsterisk
     public function control()
     {
 
+        require_once __DIR__ . "/../bootstrap.php";
+
         $this->agi->exec("NOOP", "control\ ");
 
-        $this->agi->exec("Playback", "/tmp/Keyboard");
+        //$this->agi->exec("Playback", "/tmp/Keyboard");
 
         $time_start = microtime(true);
 
@@ -174,6 +180,18 @@ class Asterisk implements IAsterisk
             }
 
             echo "\n";
+
+            //not find DialogFlow answer
+            if(!isset($astrid_answer['text']) || $astrid_answer['text'] == ""){
+                $this->agi->exec("NOOP", "DialogFlow\ Nulls\ in\ ");
+
+                $astrid_answer['text'] = AllDefaultMessages::where('textName', '=', 'MENS_DEFAULT')->get(array("textValue"));
+                $astrid_answer['text'] = $astrid_answer['text']->toArray();
+                $astrid_answer['text'] = $astrid_answer['text'][0][textValue];
+
+                $this->agi->exec("NOOP", "DialogFlow\ Nulls\ " .  $astrid_answer['text'] );
+                echo "\n";
+            }
 
             //translate text to audio
             $ret = $this->textToSpeech( $astrid_answer['text'] );
