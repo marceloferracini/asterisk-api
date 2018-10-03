@@ -51,6 +51,26 @@ class Asterisk implements IAsterisk
     }
 
     /**
+     * Get the size of a file and return that to Asterisk (used to try identify if is a sort message or no)
+     *
+     * @param $file
+     * @return int
+     */
+    public function getFileSize($file){
+
+        $fileSize = filesize($file.".wav");
+
+        $this->agi->exec("NOOP",  "fileSize=" .$fileSize);
+
+        echo "\n";
+
+        $this->agi->set_variable("fileSize", $fileSize );
+
+        return 1;
+
+    }
+
+    /**
      * create all tables and fill it with the default value
      */
     public function setupDB()
