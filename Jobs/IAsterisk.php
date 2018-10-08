@@ -15,6 +15,14 @@ interface IAsterisk
     public function __destruct();
 
     /**
+     * Get the size of a file and return that to Asterisk (used to try identify if is a sort message or no)
+     *
+     * @param $file
+     * @return int
+     */
+    public function getFileSize($file);
+
+    /**
      * create all tables and fill it with the default value
      */
     public function setupDB();

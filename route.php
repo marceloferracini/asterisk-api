@@ -66,6 +66,9 @@ function main($arrayArgv){
         case 'yesno':
             return $asterisk->yesNo( 'decisao' ); 
 
+        case 'fileSize':
+            return $asterisk->getFileSize( $arrayArgv[1]);
+
         default:
             return $asterisk->control();
 
