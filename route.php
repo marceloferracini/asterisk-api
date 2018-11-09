@@ -51,7 +51,7 @@ function main($arrayArgv){
             break;
 
         case 'getDefaultMessages':
-            echo $asterisk->getDefaultMessages();
+            echo $asterisk->getDefaultMessages( $arrayArgv[1] );
             break;
 
         case 'textToSpeech':
