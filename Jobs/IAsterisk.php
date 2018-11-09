@@ -30,7 +30,7 @@ interface IAsterisk
     /**
      * set all default messages from DB
      */
-    public function getDefaultMessages();
+    public function getDefaultMessages($like = NULL);
 
     /**
      * @return mixed

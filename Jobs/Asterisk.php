@@ -115,7 +115,7 @@ class Asterisk implements IAsterisk
         $time_start = microtime(true);
 
         if($like)
-            $messages = AllDefaultMessages::where('textName', 'like', $like.'%');
+            $messages = AllDefaultMessages::where('textName', 'like', $like.'%')->get();
         else
             $messages = AllDefaultMessages::All();
 
