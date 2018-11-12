@@ -105,7 +105,7 @@ class Asterisk implements IAsterisk
     /**
      * set all default messages from DB
      */
-    public function getDefaultMessages()
+    public function getDefaultMessages($like = NULL)
     {
 
         require_once __DIR__ . "/../bootstrap.php";
@@ -114,7 +114,12 @@ class Asterisk implements IAsterisk
 
         $time_start = microtime(true);
 
-	 foreach (AllDefaultMessages::All() as $message) {
+        if($like)
+            $messages = AllDefaultMessages::where('textName', 'like', $like.'%')->get();
+        else
+            $messages = AllDefaultMessages::All();
+
+	    foreach ($messages as $message) {
 
             //translate text to audio
             $ret = $this->textToSpeech( $message->textValue );
