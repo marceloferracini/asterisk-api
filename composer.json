@@ -4,7 +4,8 @@
     "php-curl-class/php-curl-class": "*",
     "vlucas/phpdotenv": "*",
     "google/cloud-dialogflow": "*",
-    "illuminate/database": "*"
+    "illuminate/database": "*",
+    "monolog/monolog": "*"
   },
   "autoload": {
     "classmap": [
