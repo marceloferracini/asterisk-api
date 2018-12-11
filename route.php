@@ -44,6 +44,8 @@ function main($arrayArgv){
 
     $asterisk = new Asterisk( $arrayArgv );
 
+    $asterisk->logger->info('Starting case: '.$arrayArgv[0]);
+
     switch($arrayArgv[0]){
 
         case 'setupDB':

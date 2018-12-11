@@ -5,6 +5,8 @@ include "DialogFlow.php";
 require __DIR__ . '/../vendor/autoload.php';
 
 use \Curl\Curl;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class Asterisk implements IAsterisk
 {
@@ -13,6 +15,7 @@ class Asterisk implements IAsterisk
     private $agi;
     private $curl;
     private $dotenv;
+    public  $logger;
 
     //config with default vars
     private $min_confidence = 0.80;
@@ -36,6 +39,10 @@ class Asterisk implements IAsterisk
         //load .env file
         $this->dotenv = new Dotenv\Dotenv(__DIR__ . "/../");
         $this->dotenv->load();
+
+        //logger
+        $this->logger = new Logger('AsteriskLogger');
+        $this->logger->pushHandler(new StreamHandler('/tmp/Asterisk.log', Logger::DEBUG));
     }
 
     /**
@@ -523,8 +530,12 @@ class Asterisk implements IAsterisk
      */
     public function callAstrid($message, $contextName = "")
     {
+
+        $this->logger->info('CALL DIALOG FLOW');
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
         $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, $this->file_name, 'pt-BR', $contextName);
+
+        $this->logger->info('DIALOG FLOW ANSWER:'. print_r($ret, true));
 
         return $ret;
     }
@@ -576,16 +587,17 @@ class Asterisk implements IAsterisk
         $this->curl->setHeader('Content-Type', 'multipart/form-data');
 
 
-	$this->agi->exec("NOOP", "audioPath\ " . $audio_path );
+	    $this->agi->exec("NOOP", "audioPath\ " . $audio_path );
 
         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
-        
+        $this->logger->info('SPEECH TO TEXT');
 
-	if ($this->curl->error) {
+	    if ($this->curl->error) {
             
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
+            $this->logger->info('ERROR:'.$this->curl->errorCode."-".$this->curl->errorMessage);
             $ret['status'] = 0;
 
         }else{
@@ -604,8 +616,10 @@ class Asterisk implements IAsterisk
             }
         }
 
-	        $this->agi->exec("NOOP", "confidence\ " . $ret['confidence'] );
+        $this->agi->exec("NOOP", "confidence\ " . $ret['confidence'] );
         $this->agi->exec("NOOP", "transcript\ " . $ret['transcript'] );
+
+        $this->logger->info('CONFIDENCE:'.$ret['confidence']. "-" .$ret['transcript']);
 
         return $ret;
 
