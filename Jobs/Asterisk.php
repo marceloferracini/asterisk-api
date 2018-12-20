@@ -531,11 +531,11 @@ class Asterisk implements IAsterisk
     public function callAstrid($message, $contextName = "")
     {
 
-        $this->logger->info('CALL DIALOG FLOW');
+        $this->logger->info($this->file_path.'CALL DIALOG FLOW');
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
         $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, $this->file_name, 'pt-BR', $contextName);
 
-        $this->logger->info('DIALOG FLOW ANSWER:'. print_r($ret, true));
+        $this->logger->info($this->file_path.' DIALOG FLOW ANSWER:'. print_r($ret, true));
 
         return $ret;
     }
@@ -592,12 +592,12 @@ class Asterisk implements IAsterisk
         $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
                                                                                   "audio" => "@" .  $audio_path,   
                                                                            ));
-        $this->logger->info('SPEECH TO TEXT');
+        $this->logger->info($this->file_path.' SPEECH TO TEXT');
 
 	    if ($this->curl->error) {
             
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
-            $this->logger->info('ERROR:'.$this->curl->errorCode."-".$this->curl->errorMessage);
+            $this->logger->info($this->file_path.' ERROR:'.$this->curl->errorCode."-".$this->curl->errorMessage);
             $ret['status'] = 0;
 
         }else{
@@ -619,7 +619,7 @@ class Asterisk implements IAsterisk
         $this->agi->exec("NOOP", "confidence\ " . $ret['confidence'] );
         $this->agi->exec("NOOP", "transcript\ " . $ret['transcript'] );
 
-        $this->logger->info('CONFIDENCE:'.$ret['confidence']. "-" .$ret['transcript']);
+        $this->logger->info($this->file_path.' CONFIDENCE:'.$ret['confidence']. "-" .$ret['transcript']);
 
         return $ret;
 
