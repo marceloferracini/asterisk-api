@@ -531,7 +531,7 @@ class Asterisk implements IAsterisk
     public function callAstrid($message, $contextName = "")
     {
 
-        $this->logger->info($this->file_path.'CALL DIALOG FLOW');
+        $this->logger->info($this->file_path.' CALL DIALOG FLOW');
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
         $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, $this->file_name, 'pt-BR', $contextName);
 
@@ -595,10 +595,15 @@ class Asterisk implements IAsterisk
         $this->logger->info($this->file_path.' SPEECH TO TEXT');
 
 	    if ($this->curl->error) {
-            
+
             $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
             $this->logger->info($this->file_path.' ERROR:'.$this->curl->errorCode."-".$this->curl->errorMessage);
             $ret['status'] = 0;
+
+            //move log files
+            $time = microtime(true);
+            $FileName = substr($this->file_path,strpos($this->file_path, '/')+1);
+            system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/$FileName.$time.wav');
 
         }else{
 
