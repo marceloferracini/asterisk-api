@@ -603,7 +603,9 @@ class Asterisk implements IAsterisk
             //move log files
             $time = microtime(true);
             $FileName = substr($this->file_path,strpos($this->file_path, '/')+1);
-            system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/$FileName.$time.wav');
+            system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/'.$time.'.wav');
+            $this->logger->info($this->file_path.' Put file on BKP:'.$time.'.wav');
+
 
         }else{
 
@@ -617,6 +619,12 @@ class Asterisk implements IAsterisk
 
                 $ret['transcript'] = "Error, confidence too low: " . $ret['confidence'];
                 $ret['status'] = 0;
+
+                //move log files
+                $time = microtime(true);
+                $FileName = substr($this->file_path,strpos($this->file_path, '/')+1);
+                system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/'.$time.'.wav');
+                $this->logger->info($this->file_path.' Put file on BKP:'.$time.'.wav');
 
             }
         }
