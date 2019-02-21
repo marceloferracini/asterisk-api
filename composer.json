@@ -2,10 +2,12 @@
   "require": {
     "d4rkstar/phpagi": "dev-master",
     "php-curl-class/php-curl-class": "*",
-    "vlucas/phpdotenv": "*",
+    "vlucas/phpdotenv": "2.6.1",
     "google/cloud-dialogflow": "*",
     "illuminate/database": "*",
-    "monolog/monolog": "*"
+    "monolog/monolog": "*",
+    "google/protobuf": "3.6.1",
+    "ext-bcmath" : "*"
   },
   "autoload": {
     "classmap": [
