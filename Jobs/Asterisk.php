@@ -121,38 +121,37 @@ class Asterisk implements IAsterisk
 
         $time_start = microtime(true);
 
+	$this->agi->exec("NOOP", "VARIAVEL_LIKE:\ " . $like );
+
         if($like)
             $messages = AllDefaultMessages::where('textName', 'like', $like.'%')->get();
         else
             $messages = AllDefaultMessages::All();
 
-	    foreach ($messages as $message) {
+	foreach ($messages as $message) {
+            
+		//translate text to audio
+            	$ret = $this->textToSpeech( $message->textValue );
 
-            //translate text to audio
-            $ret = $this->textToSpeech( $message->textValue );
+	    	if($ret['status'] == 1){
+               		$ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
-            if($ret['status'] == 1){
+               		$this->agi->exec("NOOP",  $message->textName . "\ ". $ret['localFile']);
 
-                $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+                	echo "\n";
 
-                $this->agi->exec("NOOP",  $message->textName . "\ ". $ret['localFile']);
+                	$this->agi->set_variable($message->textName, $ret['localFile'] );
 
-                echo "\n";
+            	}else{
 
-                $this->agi->set_variable($message->textName, $ret['localFile'] );
+                	$this->agi->exec("NOOP",  "Error on   ". $message->textName. ":::". $ret['localFile']);
 
-            }else{
-
-                $this->agi->exec("NOOP",  "Error on   ". $message->textName. ":::". $ret['localFile']);
-
-            }
+            	}
 
         }
-
-        $time_end = microtime(true);
-
+	$time_end = microtime(true);
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ getDefaultMessages:\ " .  (($time_end - $time_start)) );
-
+	
     }
 
     /**
@@ -450,7 +449,6 @@ class Asterisk implements IAsterisk
      */
     public function extTextToSpeech($message)
     {
-
         $this->agi->exec("NOOP", "extTextToSpeech\ ");
 
         $time_start = microtime(true);
@@ -560,7 +558,7 @@ class Asterisk implements IAsterisk
                                                                             "message" => $message,       
                                                                            ));
         if ($this->curl->error) {
-            
+           $this->agi->exec("NOOP", "ERRROUUUUUU"); 
             $ret['transcript'] = 'Error:\ ' . $this->curl->errorCode . '\: ' . $this->curl->errorMessage . "\ \n";
             $ret['status'] = 0;
 
@@ -651,11 +649,11 @@ class Asterisk implements IAsterisk
      */
     public function convertFileToAsterisk($s3Url, $fileName)
     {
-
         $FileNameWithOutExt = substr($fileName, 0, strpos($fileName, '.'));
 
-        if(!file_exists("/tmp/" . $FileNameWithOutExt . ".wav" )){
-
+        //if(!stream_resolve_include_path("/tmp/" . $FileNameWithOutExt . ".wav" )){
+	  if (!system( "[ -e '"."/tmp/" . $FileNameWithOutExt . ".wav"."' ] && echo 1 || echo 0 ")){
+         
             $audio = file_get_contents($s3Url);
 
             //save file on /tmp
