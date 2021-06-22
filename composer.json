@@ -1,5 +1,15 @@
 {
   "require": {
-    "d4rkstar/phpagi": "dev-master"
+    "d4rkstar/phpagi": "dev-master",
+    "php-curl-class/php-curl-class": "8.3.3",
+    "vlucas/phpdotenv": "2.5.1",
+    "google/cloud-dialogflow": "0.5.1",
+    "illuminate/database": "v5.7.15",
+    "monolog/monolog": "1.24.0"
+  },
+  "autoload": {
+    "classmap": [
+      "classes"
+    ]
   }
 }
