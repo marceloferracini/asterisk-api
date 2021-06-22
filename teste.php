@@ -29,11 +29,11 @@ exten => 123,n,Playback(${resposta})
  *
  * use the follows command to create the table on DB:
  * php route.php setupDB
- *
- * error_reporting(E_ALL);
- * ini_set('display_errors', TRUE);
- * ini_set('display_startup_errors', TRUE);
- */
+*/
+ error_reporting(E_ALL);
+ ini_set('display_errors', TRUE);
+ ini_set('display_startup_errors', TRUE);
+
 ob_start();
 
 include "Jobs/Asterisk.php";
@@ -81,6 +81,6 @@ ob_end_flush();
 //main($argv);
 main(array('', 'getDefaultMessages', 'oi', '/tmp/2001'));
 //main(array('', 'callIntenction', 'oi', '/tmp/2001'));
-//main(array('', 'yesno','/tmp/2002'));
+//main(array('', 'yesno', '/tmp/2002', '/tmp/2002'));
 //main(array('','textToSpeech',"Certo, Aguarde só um momentinho que vou verificar"));
 ?>
