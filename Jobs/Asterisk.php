@@ -87,8 +87,14 @@ class Asterisk implements IAsterisk
         require_once "database/AllDefaultMessages.php";
 
         //fill default values
-        $defaults[] = array('textName'  => 'MENS_AGUARDE',
+        $defaults[] = array('textName'  => 'MENS_AGUARDE0',
                             'textValue' => 'Certo, Aguarde só um momentinho que vou verificar');
+        $defaults[] = array('textName'  => 'MENS_AGUARDE1',
+                            'textValue' => 'OK, só um minuto');
+        $defaults[] = array('textName'  => 'MENS_AGUARDE2',
+                            'textValue' => 'só um instante, vou verificar');
+        $defaults[] = array('textName'  => 'MENS_AGUARDE3',
+                            'textValue' => 'Vou checar pra você');
         $defaults[] = array('textName'  => 'MENS_NAO_ENTENDI',
                             'textValue' => 'Não entendi sua pergunta, poderia repetir?');
         $defaults[] = array('textName'  => 'MENS_NAO_CONSEGUI_AJUDAR',
@@ -103,6 +109,10 @@ class Asterisk implements IAsterisk
                             'textValue' => 'Nesse caso não posso ajuda-lo, peço que entre em contato com nosso sac de segunda a sexta-feira em horário comercial.');
         $defaults[] = array('textName'  => 'MENS_DECISAO',
                             'textValue' => 'Desculpe, não consegui entender, diga pausadamente, sim ou não');
+        $defaults[] = array('textName'  => 'MENS_DEFAULT',
+                            'textValue' => 'Nesse caso ainda não posso ajudá la, peço que entre em contato com nosso sac de segunda a sexta-feira das nove as dezenove horas.');
+        $defaults[] = array('textName'  => 'MENS_OUTRA_DUVIDA',
+                            'textValue' => 'Tem mais alguma dúvida?');
 
         //store on DB
         foreach ($defaults as $default)  AllDefaultMessages::Create($default);
@@ -122,10 +132,11 @@ class Asterisk implements IAsterisk
 
 	    $this->agi->exec("NOOP", "VARIAVEL_LIKE:\ " . $like );
 
-        if($like)
+        if($like){
             $messages = AllDefaultMessages::where('textName', 'like', $like.'%')->get();
-        else
+        } else {
             $messages = AllDefaultMessages::All();
+        }
 
 	    foreach ($messages as $message) {
             
@@ -265,6 +276,7 @@ class Asterisk implements IAsterisk
 
         //send text to astrid-api
         $astrid_answer = $this->callAstrid($message, $contextName);
+        
 
 
         $time_end = microtime(true);
