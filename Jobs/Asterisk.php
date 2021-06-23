@@ -112,8 +112,7 @@ class Asterisk implements IAsterisk
     /**
      * set all default messages from DB
      */
-    public function getDefaultMessages($like = NULL)
-    {
+    public function getDefaultMessages($like = NULL) {
 
         require_once __DIR__ . "/../bootstrap.php";
 
@@ -121,35 +120,36 @@ class Asterisk implements IAsterisk
 
         $time_start = microtime(true);
 
-	$this->agi->exec("NOOP", "VARIAVEL_LIKE:\ " . $like );
+	    $this->agi->exec("NOOP", "VARIAVEL_LIKE:\ " . $like );
 
         if($like)
             $messages = AllDefaultMessages::where('textName', 'like', $like.'%')->get();
         else
             $messages = AllDefaultMessages::All();
 
-	foreach ($messages as $message) {
+	    foreach ($messages as $message) {
             
-		//translate text to audio
-            	$ret = $this->textToSpeech( $message->textValue );
+		    //translate text to audio
+            $ret = $this->textToSpeech( $message->textValue );
 
 	    	if($ret['status'] == 1){
-               		$ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+                $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
-               		$this->agi->exec("NOOP",  $message->textName . "\ ". $ret['localFile']);
+                $this->agi->exec("NOOP",  $message->textName . "\ ". $ret['localFile']);
 
-                	echo "\n";
+                echo "\n";
 
-                	$this->agi->set_variable($message->textName, $ret['localFile'] );
+                $this->agi->set_variable($message->textName, $ret['localFile'] );
 
-            	}else{
+            }else{
 
-                	$this->agi->exec("NOOP",  "Error on   ". $message->textName. ":::". $ret['localFile']);
+                $this->agi->exec("NOOP",  "Error on   ". $message->textName. ":::". $ret['localFile']);
 
-            	}
+            }
 
         }
-	$time_end = microtime(true);
+        
+	    $time_end = microtime(true);
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ getDefaultMessages:\ " .  (($time_end - $time_start)) );
 	
     }
@@ -318,15 +318,14 @@ class Asterisk implements IAsterisk
      * @param string $contextName
      * @return int|mixed
      */
-    public function yesNo($contextName = '')
-    {
-	$yesno = 0;
+    public function yesNo($contextName = '') {
+	    $yesno = 0;
 
-	echo "\n";
+	    echo "\n";
         $this->agi->set_variable("not_understand", 0 );
-	echo "\n";
-	$this->agi->set_variable("returnToAsterisk", "");	
-	echo "\n";
+	    echo "\n";
+	    $this->agi->set_variable("returnToAsterisk", "");	
+	    echo "\n";
 
         $this->agi->exec("NOOP", "yesNo\ ");
 
@@ -341,28 +340,28 @@ class Asterisk implements IAsterisk
 
         $this->agi->exec("NOOP", "Total\ Execution\ Time\ speechToText:\ " .  (($time_end - $time_start)) );
 
-	$this->agi->exec("NOOP", "Status\ " . $message['status'] );
+	    $this->agi->exec("NOOP", "Status\ " . $message['status'] );
 
 
-	$this->agi->exec("NOOP", "contextName\ " . $contextName );
+	    $this->agi->exec("NOOP", "contextName\ " . $contextName );
 
 
         if($message['status'] == 1) {
 		
             $this->agi->exec("NOOP", " entrei\ no\ callastrid\ ");
             
-	    $time_start = microtime(true);
+	        $time_start = microtime(true);
 
             //send text to astrid-api
             $astrid_answer = $this->callAstrid($message['transcript'], $contextName);
 
-		$this->agi->exec("NOOP", "Sai\ do\ AstridAnswer:\ ");
+		    $this->agi->exec("NOOP", "Sai\ do\ AstridAnswer:\ ");
 
-	var_dump($astrid_answer);	
+	        var_dump($astrid_answer);	
 
             $time_end = microtime(true);
 
-	    echo "\n";
+	        echo "\n";
 
             $this->agi->exec("NOOP", "AstridAnswer:\ " . $astrid_answer['text']);
 
@@ -390,7 +389,7 @@ class Asterisk implements IAsterisk
 
             $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
-	var_dump($astrid_answer);
+	        var_dump($astrid_answer);
 
             //if exist parameters on DialogFlow, set it to Asterisk
             if ($astrid_answer['parameters']) {
@@ -411,25 +410,13 @@ class Asterisk implements IAsterisk
                 }
             }
 
-	
-	    //check if the Dialog Flow answer is SIM or NAO
-	    /* disabled to allow any answer in yesno case
-    	if($yesno == 0){
-
-		     $this->agi->set_variable("not_understand", 1);
-		     $this->agi->exec("NOOP", "Entrei\ no\ if\ SIM\ NAO\ ");
-               	     return 1;
-		
-		}	 	
-        */
-
             echo "\n";
 
             $this->agi->set_variable("resposta", $ret['localFile']);
 	
-	    echo "\n";
+	        echo "\n";
 
-        }else{
+        } else {
 
             echo "\n";
             $this->agi->set_variable("not_understand", 1 );
