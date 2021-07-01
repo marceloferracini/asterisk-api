@@ -2,6 +2,7 @@
 
 include "IAsterisk.php";
 include "DialogFlow.php";
+include "Translate.php";
 require __DIR__ . '/../vendor/autoload.php';
 
 use \Curl\Curl;
@@ -75,6 +76,12 @@ class Asterisk implements IAsterisk
 
         return 1;
 
+    }
+
+    public function bozoMarcelo()
+    {
+        $ret = Translate::retAlgo();
+        //echo "VOLTOU ESTE VALOR " . $ret;
     }
 
     /**
@@ -553,20 +560,28 @@ class Asterisk implements IAsterisk
 
         $this->agi->exec("NOOP", "textToSpeech\ " . $message);
 
-        $this->curl->get( getenv("TRANSLATE-API-URL") . '/text-to-speech', array(
-                                                                            "message" => $message,       
-                                                                           ));
-        if ($this->curl->error) {
-           $this->agi->exec("NOOP", "ERRROUUUUUU"); 
-            $ret['transcript'] = 'Error:\ ' . $this->curl->errorCode . '\: ' . $this->curl->errorMessage . "\ \n";
-            $ret['status'] = 0;
 
-        }else{
+        $response = Translate::TranslateTextToSpeech($message);
 
-            $ret['transcript'] = $this->curl->response;
-            $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
-            $ret['status'] = 1;
-        }
+        $ret['transcript'] = $response;
+        $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
+        $ret['status'] = 1;
+
+
+        // $this->curl->get( getenv("TRANSLATE-API-URL") . '/text-to-speech', array(
+        //                                                                     "message" => $message,       
+        //                                                                    ));
+        // if ($this->curl->error) {
+        //    $this->agi->exec("NOOP", "ERRROUUUUUU"); 
+        //     $ret['transcript'] = 'Error:\ ' . $this->curl->errorCode . '\: ' . $this->curl->errorMessage . "\ \n";
+        //     $ret['status'] = 0;
+
+        // }else{
+
+        //     $ret['transcript'] = $this->curl->response;
+        //     $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
+        //     $ret['status'] = 1;
+        // }
 
         return $ret;
 

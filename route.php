@@ -52,6 +52,10 @@ function main($arrayArgv){
             echo $asterisk->setupDB();
             break;
 
+        case 'bozo':
+            echo $asterisk->bozoMarcelo();
+            break;
+
         case 'getDefaultMessages':
             echo $asterisk->getDefaultMessages( $arrayArgv[1] );
             break;

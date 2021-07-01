@@ -42,7 +42,7 @@ abstract class DialogFlow
 
         // new session
        // $key = array('credentials' => __DIR__ . '/../Storage/google_key.json');
-	    $key = array('credentials' => '/var/lib/asterisk/agi-bin/asterisk-api/Storage/google_key.json');
+	    $key = array('credentials' => '/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
 
         $logger->info('set credentials ');
 
@@ -96,7 +96,7 @@ abstract class DialogFlow
 
 	try{
 
-	putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/asterisk-api/Storage/google_key.json');
+	putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
 	//$client->useApplicationDefaultCredentials();
 
             $contextsClient = new ContextsClient();
