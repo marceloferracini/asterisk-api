@@ -1,15 +1,13 @@
 <?php
 
+use \Curl\Curl;
 
-class Translate {
+require __DIR__ . '/../vendor/autoload.php';
+
+class Translate 
+{
 
     public function TranslateTextToSpeech($message) {
-
-        // creating AGI object
-        $agi = new AGI();
-
-        //$file_url = "";
-        $agi->exec("NOOP", "CAIU AQUI DENTRO PELO MENOS ");
 
         //check if this text exist on DB
         //$records = $this->iTranslationsRepository->getFileByMessage( $request->message )->toArray();
@@ -38,6 +36,59 @@ class Translate {
         //}
 
         //return $audio;
+
+        $googleAPIKey = "AIzaSyDdo5kxyDffKhLt475Z_F5O4bu0nNoOjLs";
+
+        $requestData = [
+                'input' =>[
+                    'text' => "VAMOS TESTAR A REQUISICAO"
+                ],
+                'voice' => [
+                    'languageCode' => 'pt-BR',
+                    'name' => 'pt-BR-Standard-A'
+                ],
+                'audioConfig' => [
+                    'audioEncoding' => 'MP3',
+                    'pitch' => 0.00,
+                    'speakingRate' => 1.00
+                ]
+            ];
+
+        $curl = new Curl();
+        $curl->post("https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=" . $googleAPIKey, $requestData);
+
+        // $client = new GuzzleHttp\Client();
+        // $requestData = [
+        //     'input' =>[
+        //         'text' => $text
+        //     ],
+        //     'voice' => [
+        //         'languageCode' => 'pt-BR',
+        //         'name' => 'pt-BR-Standard-A'
+        //     ],
+        //     'audioConfig' => [
+        //         'audioEncoding' => 'MP3',
+        //         'pitch' => 0.00,
+        //         'speakingRate' => 1.00
+        //     ]
+        // ];
+
+        // try {
+        //     $response = $client->request('POST', 'https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=' . $googleAPIKey, [
+        //         'json' => $requestData
+        //     ]);
+        // } catch (Exception $e) {
+        //     die('Something went wrong: ' . $e->getMessage());
+        // }
+
+        // $fileData = json_decode($response->getBody()->getContents(), true);
+
+        // $result['AudioStream'] = base64_decode($fileData['audioContent']);
+        // $result['file_name'] = uniqid().'-Google.mp3';
+
+        var_dump($curl->response);
+
+        return $curl->response;
     }
 
     // function googleTextToSpeech($text)
