@@ -69,7 +69,16 @@ class Translate
         $response = curl_exec($curl);
 
         curl_close($curl);
-        echo $response;
+
+        $fileData = json_decode($response, true);
+        
+        $result = [];
+        $result['AudioStream'] = base64_decode($fileData['audioContent']);
+        $result['file_name'] = uniqid().'-Google.mp3';
+
+        return $result;
+
+        
 
         // $client = new GuzzleHttp\Client();
         // $requestData = [
