@@ -11,7 +11,7 @@ use GuzzleHttp;
 require __DIR__.'/../vendor/autoload.php';
 
 
-abstract class Translate {
+class Translate {
 
     public function  __construct()
     {
@@ -24,6 +24,7 @@ abstract class Translate {
     function TranslateTextToSpeech($message) {
 
         $file_url = "";
+        $this->agi->exec("NOOP", "CAIU AQUI DENTRO PELO MENOS ");
 
         //check if this text exist on DB
         //$records = $this->iTranslationsRepository->getFileByMessage( $request->message )->toArray();
@@ -51,7 +52,7 @@ abstract class Translate {
 
         //}
 
-        var_dump($audio);
+        return $audio;
     }
 
     function googleTextToSpeech($text)
