@@ -558,31 +558,13 @@ class Asterisk implements IAsterisk
     public function textToSpeech($message)
     {
 
-        $this->agi->exec("NOOP", "VAI-CURINTIA " . $message);
-
         $translate = new Translate();
         $response = $translate->TranslateTextToSpeech($message);
 	
-	$ret = [];
+	    $ret = [];
         $ret['transcript'] = "/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $response;
         $ret['fileName'] =  $response;
         $ret['status'] = 1;
-
-
-        // $this->curl->get( getenv("TRANSLATE-API-URL") . '/text-to-speech', array(
-        //                                                                     "message" => $message,       
-        //                                                                    ));
-        // if ($this->curl->error) {
-        //    $this->agi->exec("NOOP", "ERRROUUUUUU"); 
-        //     $ret['transcript'] = 'Error:\ ' . $this->curl->errorCode . '\: ' . $this->curl->errorMessage . "\ \n";
-        //     $ret['status'] = 0;
-
-        // }else{
-
-        //     $ret['transcript'] = $this->curl->response;
-        //     $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
-        //     $ret['status'] = 1;
-        // }
 	
         return $ret;
 
