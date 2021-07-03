@@ -558,16 +558,14 @@ class Asterisk implements IAsterisk
     public function textToSpeech($message)
     {
 
-        $this->agi->exec("NOOP", "textToSpeech\ " . $message);
-
-        echo "TESTANDO ECHO";
-        var_dump('TESTANDO VARDUMP');
+        $this->agi->exec("NOOP", "VAI-CURINTIA " . $message);
 
         $translate = new Translate();
         $response = $translate->TranslateTextToSpeech($message);
-
-        $ret['transcript'] = $response;
-        $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
+	
+	$ret = [];
+        $ret['transcript'] = "/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $response;
+        $ret['fileName'] =  $response;
         $ret['status'] = 1;
 
 
@@ -585,7 +583,7 @@ class Asterisk implements IAsterisk
         //     $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
         //     $ret['status'] = 1;
         // }
-
+	
         return $ret;
 
     }

@@ -50,7 +50,7 @@ class Translate
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS =>'{
             "input": {
-                "text" : "Mensagem de teste do marcelo"
+                "text" : "'.$message.'"
             },
             "voice" : {
                 "languageCode" : "pt-BR",
@@ -76,7 +76,11 @@ class Translate
         $result['AudioStream'] = base64_decode($fileData['audioContent']);
         $result['file_name'] = uniqid().'-Google.mp3';
 
-        return $result;
+
+	file_put_contents("/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $result['file_name'], $result['AudioStream']);
+
+
+        return $result['file_name'];
 
         
 
@@ -109,9 +113,7 @@ class Translate
         // $result['AudioStream'] = base64_decode($fileData['audioContent']);
         // $result['file_name'] = uniqid().'-Google.mp3';
 
-        var_dump($curl->response);
 
-        return $curl->response;
     }
 
     // function googleTextToSpeech($text)
