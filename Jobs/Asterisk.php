@@ -560,6 +560,9 @@ class Asterisk implements IAsterisk
 
         $this->agi->exec("NOOP", "textToSpeech\ " . $message);
 
+        echo "TESTANDO ECHO";
+        var_dump('TESTANDO VARDUMP');
+
         $translate = new Translate();
         $response = $translate->TranslateTextToSpeech($message);
 
