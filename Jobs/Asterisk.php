@@ -560,8 +560,8 @@ class Asterisk implements IAsterisk
 
         $this->agi->exec("NOOP", "textToSpeech\ " . $message);
 
-
-        $response = Translate::TranslateTextToSpeech($message);
+        $translate = new Translate();
+        $response = $translate->TranslateTextToSpeech($message);
 
         $ret['transcript'] = $response;
         $ret['fileName'] =  substr($ret['transcript'], strrpos($ret['transcript'], '/')+1);
