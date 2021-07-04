@@ -74,7 +74,7 @@ class Translate
         CURLOPT_POSTFIELDS => $fields,
         CURLOPT_HTTPHEADER => array(
             'Content-Type: audio/vnd.wave',
-            'Authorization: Bearer ya29.a0ARrdaM_s5DSPfVbQkNK42GxTGgrACDNKTtA72enxw0Ue8CqoBHKIRN9gcifkqoT7IPYm1G7sIOmn6bnFp8sBC8CONUjjiORQ481wjADFibaH1iI0AkpDG8ek9_7yjRzXgToiXbTeqrERTwwtMD7l8DkLdhBP'
+            'Authorization: Bearer ya29.a0ARrdaM-lhdMkUowAAjG3oTx7sWEfFq5li2MNoM-2fDz1EeO4Hu2afzJAMsRSZWzPDWgGqznHiN3NXhJWdcSemSwWpsxa4Npul2r33nCbwi0nYEo84T6PdcJUrBmj0Hi7pGJvoni3-Vpqsa0jmPmu__XY_FJY'
         ),
         ));
 
