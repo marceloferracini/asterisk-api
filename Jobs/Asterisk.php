@@ -561,7 +561,7 @@ class Asterisk implements IAsterisk
         $translate = new Translate();
         $response = $translate->TranslateTextToSpeech($message);
 	
-	    $ret = [];
+	    
         $ret['transcript'] = "/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $response;
         $ret['fileName'] =  $response;
         $ret['status'] = 1;
@@ -581,51 +581,40 @@ class Asterisk implements IAsterisk
     public function speechToText($audio_path)
     {
 
-        $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
-        $this->curl->setHeader('Content-Type', 'multipart/form-data');
+        // $this->curl->setOpt("CURLOPT_POSTFIELDS",true);
+        // $this->curl->setHeader('Content-Type', 'multipart/form-data');
 
 
 	    $this->agi->exec("NOOP", "audioPath\ " . $audio_path );
 
-        $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
-                                                                                  "audio" => "@" .  $audio_path,   
-                                                                           ));
-        $this->logger->info($this->file_path.' SPEECH TO TEXT');
+        $translate = new Translate();
+        $response = $translate->TranslateSpeechToText($audio_path);
 
-	    if ($this->curl->error) {
+        // $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
+        //                                                                           "audio" => "@" .  $audio_path,   
+        //                                                                    ));
+        // $this->logger->info($this->file_path.' SPEECH TO TEXT');
 
-            $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
-            $this->logger->info($this->file_path.' ERROR:'.$this->curl->errorCode."-".$this->curl->errorMessage);
-            $ret['status'] = 0;
+	    // if ($this->curl->error) {
 
-            //move log files
-            $time = microtime(true);
-            $FileName = substr($this->file_path,strpos($this->file_path, '/')+1);
-            system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/'.$time.'.wav');
-            $this->logger->info($this->file_path.' Put file on BKP:'.$time.'.wav');
+        //     $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
+        //     $this->logger->info($this->file_path.' ERROR:'.$this->curl->errorCode."-".$this->curl->errorMessage);
+        //     $ret['status'] = 0;
+
+        //     //move log files
+        //     $time = microtime(true);
+        //     $FileName = substr($this->file_path,strpos($this->file_path, '/')+1);
+        //     system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/'.$time.'.wav');
+        //     $this->logger->info($this->file_path.' Put file on BKP:'.$time.'.wav');
 
 
-        }else{
+        // }else{
+        var_dump($response);
+        $ret = [];
+        $ret = get_object_vars($response);
 
-            $ret = get_object_vars($this->curl->response);
-
-            if($ret['confidence'] >= $this->min_confidence ){
-
-                $ret['status'] = 1;
-
-            }else{
-
-                $ret['transcript'] = "Error, confidence too low: " . $ret['confidence'];
-                $ret['status'] = 0;
-
-                //move log files
-                $time = microtime(true);
-                $FileName = substr($this->file_path,strpos($this->file_path, '/')+1);
-                system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/'.$time.'.wav');
-                $this->logger->info($this->file_path.' Put file on BKP:'.$time.'.wav');
-
-            }
-        }
+        
+        $ret['status'] = 1;
 
         $this->agi->exec("NOOP", "confidence\ " . $ret['confidence'] );
         $this->agi->exec("NOOP", "transcript\ " . $ret['transcript'] );
