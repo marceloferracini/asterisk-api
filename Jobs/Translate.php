@@ -58,8 +58,6 @@ class Translate
 
     function TranslateSpeechToText($audio_path)
     {
-        $fields = array('file' => '@' . $audio_path);
-
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -71,7 +69,7 @@ class Translate
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $fields,
+        CURLOPT_POSTFIELDS => "@" . $audio_path,
         CURLOPT_HTTPHEADER => array(
             'Content-Type: audio/vnd.wave',
             'Authorization: Bearer ya29.a0ARrdaM-lhdMkUowAAjG3oTx7sWEfFq5li2MNoM-2fDz1EeO4Hu2afzJAMsRSZWzPDWgGqznHiN3NXhJWdcSemSwWpsxa4Npul2r33nCbwi0nYEo84T6PdcJUrBmj0Hi7pGJvoni3-Vpqsa0jmPmu__XY_FJY'
