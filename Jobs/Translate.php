@@ -62,7 +62,7 @@ class Translate
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://storage.googleapis.com/upload/storage/v1/b/bk-audios/o?uploadType=media&name=Agora-Foi',
+        CURLOPT_URL => 'https://storage.googleapis.com/upload/storage/v1/b/bk-audios/o?uploadType=media&name=Testando-Deus',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -77,43 +77,44 @@ class Translate
         ),
         ));
 
+        $responseStorage = curl_exec($curl);
+
+        curl_close($curl);
+        //return $response;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://speech.googleapis.com/v1/speech:recognize',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>'{
+            "config": {
+                "encoding": "LINEAR16",
+                "sampleRateHertz": 8000,
+                "languageCode": "pt-BR",
+                "enableWordTimeOffsets": false
+            },
+            "audio": {
+                "uri": "gs://bk-audios/Testando-Deus"
+            }
+        }',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ya29.a0ARrdaM_s20z0u8UmNk5wUCDc8P3O-xJPiluQbVUgp5TMqqvqWCKGNyGVCTFWVy2jbCDVXNf_IUJOrPIy3NkvRNTqDLKJAMVHjm-QQT8AlCVnZLivq_21zItNS6bgyF5T1xf7tC2kimflo2fSDutPXvSpuyIA'
+        ),
+        ));
+
         $response = curl_exec($curl);
 
         curl_close($curl);
+
         return $response;
-
-        // $curl = curl_init();
-
-        // curl_setopt_array($curl, array(
-        // CURLOPT_URL => 'https://speech.googleapis.com/v1/speech:recognize',
-        // CURLOPT_RETURNTRANSFER => true,
-        // CURLOPT_ENCODING => '',
-        // CURLOPT_MAXREDIRS => 10,
-        // CURLOPT_TIMEOUT => 0,
-        // CURLOPT_FOLLOWLOCATION => true,
-        // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        // CURLOPT_CUSTOMREQUEST => 'POST',
-        // CURLOPT_POSTFIELDS =>'{
-        //     "config": {
-        //         "encoding": "LINEAR16",
-        //         "sampleRateHertz": 8000,
-        //         "languageCode": "pt-BR",
-        //         "enableWordTimeOffsets": false
-        //     },
-        //     "audio": {
-        //         "uri": "gs://bk-audios/2001"
-        //     }
-        // }',
-        // CURLOPT_HTTPHEADER => array(
-        //     'Content-Type: application/json',
-        //     'Authorization: Bearer ya29.a0ARrdaM_s20z0u8UmNk5wUCDc8P3O-xJPiluQbVUgp5TMqqvqWCKGNyGVCTFWVy2jbCDVXNf_IUJOrPIy3NkvRNTqDLKJAMVHjm-QQT8AlCVnZLivq_21zItNS6bgyF5T1xf7tC2kimflo2fSDutPXvSpuyIA'
-        // ),
-        // ));
-
-        // $response = curl_exec($curl);
-
-        // curl_close($curl);
-        // echo $response;
 
 
 
