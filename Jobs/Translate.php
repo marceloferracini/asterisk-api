@@ -62,7 +62,7 @@ class Translate
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://storage.googleapis.com/upload/storage/v1/b/bk-audios/o?uploadType=media&name=Testando-Deus',
+        CURLOPT_URL => 'https://storage.googleapis.com/upload/storage/v1/b/bk-audios/o?uploadType=media&name=obg-Deus',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -70,7 +70,7 @@ class Translate
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => "$audio_path",
+        CURLOPT_POSTFIELDS => "@" .  $audio_path,
         CURLOPT_HTTPHEADER => array(
             'Content-Type: audio/vnd.wave',
             'Authorization: Bearer ya29.a0ARrdaM_s5DSPfVbQkNK42GxTGgrACDNKTtA72enxw0Ue8CqoBHKIRN9gcifkqoT7IPYm1G7sIOmn6bnFp8sBC8CONUjjiORQ481wjADFibaH1iI0AkpDG8ek9_7yjRzXgToiXbTeqrERTwwtMD7l8DkLdhBP'
@@ -101,7 +101,7 @@ class Translate
                 "enableWordTimeOffsets": false
             },
             "audio": {
-                "uri": "gs://bk-audios/Testando-Deus"
+                "uri": "gs://bk-audios/obg-Deus"
             }
         }',
         CURLOPT_HTTPHEADER => array(
