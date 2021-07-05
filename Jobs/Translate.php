@@ -2,9 +2,8 @@
 
 use \Curl\Curl;
 
-use Google\Service\Speech\RecognitionConfig\AudioEncoding;
-use Google\Service\Speech\RecognitionConfig;
-use Google\Service\Speech\StreamingRecognitionConfig;
+// Imports the Google Cloud client library
+use Google\Cloud\Speech\V1\SpeechClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -62,6 +61,30 @@ class Translate
 
     function TranslateSpeechToText($audio_path)
     {
+
+        // Instantiates a client
+        $speech = new SpeechClient([
+            'projectId' => 'speech-project-212814',
+            'languageCode' => 'pt-BR',
+        ]);
+
+        $options = [
+            'encoding' => 'LINEAR16',
+            'sampleRateHertz' => 8000,
+        ];
+
+        // Detects speech in the audio file
+        $results = $speech->recognize(fopen($audio_path->path(), 'r'), $options);
+
+        foreach ($results as $result) {
+            $ret =  array(
+                             'transcript' => $result->alternatives()[0]['transcript'],
+                             'confidence' => $result->alternatives()[0]['confidence']
+                         );
+        }
+
+        return $ret;
+
         // $uploadFileMimeType = mime_content_type($audio_path);
         // $uploadFilePostKey = 'file';
 
@@ -129,26 +152,6 @@ class Translate
         // curl_close($curl);
 
         // return $response;
-
-        $recognitionConfig = new RecognitionConfig();
-        $recognitionConfig->setEncoding(AudioEncoding::LINEAR16);
-        $recognitionConfig->setSampleRateHertz(8000);
-        $recognitionConfig->setLanguageCode('pt-BR');
-        $config = new StreamingRecognitionConfig();
-        $config->setConfig($recognitionConfig);
-
-        $audioResource = fopen('/tmp/2001.wav', 'r');
-
-        $responses = $speechClient->recognizeAudioStream($config, $audioResource);
-
-        // foreach ($responses as $element) {
-        //     return $element;
-        // }
-
-        return $responses;
-
-
-
 
     }
     
