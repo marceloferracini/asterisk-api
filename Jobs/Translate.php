@@ -1,11 +1,11 @@
 <?php
 
+require __DIR__ . '/../vendor/autoload.php';
+
 use \Curl\Curl;
 
 // Imports the Google Cloud client library
-use Google\Cloud\Speech\V1\SpeechClient;
-
-require __DIR__ . '/../vendor/autoload.php';
+use Google\Cloud\Speech\SpeechClient;
 
 class Translate 
 {
