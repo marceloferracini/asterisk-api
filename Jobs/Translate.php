@@ -74,7 +74,7 @@ class Translate
         ];
 
         // Detects speech in the audio file
-        $results = $speech->recognize(fopen($audio_path->path(), 'r'), $options);
+        $results = $speech->recognize(fopen($audio_path, 'r'), $options);
 
         foreach ($results as $result) {
             $ret =  array(
