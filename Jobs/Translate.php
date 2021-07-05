@@ -64,7 +64,7 @@ class Translate
 
         // Instantiates a client
         $speech = new SpeechClient([
-            'projectId' => 'speech-project-212814',
+            'projectId' => 'astrid-5a294',
             'languageCode' => 'pt-BR',
         ]);
 
