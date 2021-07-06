@@ -540,7 +540,7 @@ class Asterisk implements IAsterisk
 
         $this->logger->info($this->file_path.' CALL DIALOG FLOW');
         //($projectId, $text, $sessionId, $languageCode = 'pt-BR')
-        $ret = Dialogflow::detectIntentTexts('astrid-5a294',$message, $this->file_name, 'pt-BR', $contextName);
+        $ret = Dialogflow::detectIntentTexts('voicebot-judite',$message, $this->file_name, 'pt-BR', $contextName);
 
         $this->logger->info($this->file_path.' DIALOG FLOW ANSWER:'. print_r($ret, true));
 
@@ -610,7 +610,7 @@ class Asterisk implements IAsterisk
 
         // }else{
         var_dump($response);
-        
+
         $ret = [];
         $ret = get_object_vars($response);
 

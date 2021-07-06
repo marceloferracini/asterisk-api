@@ -46,7 +46,7 @@ abstract class DialogFlow
 
         $logger->info('set credentials ');
 
-	$sessionsClient = new SessionsClient($key);
+	    $sessionsClient = new SessionsClient($key);
 
         $logger->info('new sessionsClient');
 
@@ -62,7 +62,7 @@ abstract class DialogFlow
         $textInput->setLanguageCode($languageCode);
 
 
-	$logger->info('create text input ');
+	    $logger->info('create text input ');
 
         /*
         $contextsClient = new ContextsClient();
@@ -92,43 +92,43 @@ abstract class DialogFlow
 
         if($contextName){
 
-	$logger->info(' entrei no contextname ');
+            $logger->info(' entrei no contextname ');
 
-	try{
+            try{
 
-	putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
-	//$client->useApplicationDefaultCredentials();
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
+            //$client->useApplicationDefaultCredentials();
 
-            $contextsClient = new ContextsClient();
+                    $contextsClient = new ContextsClient();
 
-            //context
-            $context[] = new Context();
-            $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
-            $context[0]->setName($formattedName);
+                    //context
+                    $context[] = new Context();
+                    $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
+                    $context[0]->setName($formattedName);
 
-	$logger->info(' context criado ');
+            $logger->info(' context criado ');
 
-            //"projects/astrid-5a294/agent/sessions/$sessionId/contexts/decisao"
-            $context[0]->setLifespanCount(2);
+                    //"projects/astrid-5a294/agent/sessions/$sessionId/contexts/decisao"
+                    $context[0]->setLifespanCount(2);
 
-            //Query Parameters
-            $queryParameters['queryParams'] = new QueryParameters();
-            $queryParameters['queryParams']->setContexts($context);
+                    //Query Parameters
+                    $queryParameters['queryParams'] = new QueryParameters();
+                    $queryParameters['queryParams']->setContexts($context);
 
-	} catch (Exception $e) {
-    		//echo 'Exceção capturada: ',  $e->getMessage(), "\n";
-		 $logger->info('erro no contexto: '. $e->getMessage());
-	}
+            } catch (Exception $e) {
+                    //echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+                $logger->info('erro no contexto: '. $e->getMessage());
+            }
 
         }else{
 
-	$logger->info('n entrei no contextname ');
+	        $logger->info('n entrei no contextname ');
 
             $queryParameters = array();
 
         }
 
-$logger->info('contextName ok');
+        $logger->info('contextName ok');
 
         // create query input
         $queryInput = new QueryInput();
@@ -138,7 +138,7 @@ $logger->info('contextName ok');
         // get response and relevant info
         $response = $sessionsClient->detectIntent($session, $queryInput, $queryParameters);
 
-$logger->info('get response ');
+        $logger->info('get response ');
 
         $queryResult = $response->getQueryResult();
 
@@ -153,7 +153,7 @@ $logger->info('get response ');
 
         $allResponses = $queryResult->getFulfillmentMessages();
 
-$logger->info('get all responses ');
+        $logger->info('get all responses ');
 
         $ret['parameters']  = json_decode($queryResult->getParameters()->serializeToJsonString());
 
