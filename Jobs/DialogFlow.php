@@ -31,9 +31,6 @@ abstract class DialogFlow
 
     public static function detectIntentTexts($projectId, $text, $sessionId, $languageCode = 'pt-BR', $contextName = '')
     {
-
-
-
         //logger
         $logger = new Logger('AsteriskLogger');
         $logger->pushHandler(new StreamHandler('/tmp/Asterisk.log', Logger::DEBUG));
@@ -63,72 +60,46 @@ abstract class DialogFlow
 
 
 	    $logger->info('create text input ');
+        
+        // if($contextName){
 
-        /*
-        $contextsClient = new ContextsClient();
-        try {
-            $formattedParent = $contextsClient->sessionName($projectId, $sessionId);
-            // Iterate through all elements
-            $pagedResponse = $contextsClient->listContexts($formattedParent);
+        //     $logger->info(' entrei no contextname ');
 
+        //     try{
 
-            foreach ($pagedResponse->iterateAllElements() as $element) {
-                //var_dump(get_class_methods($element));
+        //     putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
+        //     //$client->useApplicationDefaultCredentials();
 
-               // var_dump($element->getName());
-            }
+        //             $contextsClient = new ContextsClient();
 
-            // OR iterate over pages of elements
-            $pagedResponse = $contextsClient->listContexts($formattedParent);
-            foreach ($pagedResponse->iteratePages() as $page) {
-                foreach ($page as $element) {
-                    // doSomethingWith($element);
-                }
-            }
-        } finally {
-            $contextsClient->close();
-        }
-        */
+        //             //context
+        //             $context[] = new Context();
+        //             $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
+        //             $context[0]->setName($formattedName);
 
-        if($contextName){
+        //     $logger->info(' context criado ');
 
-            $logger->info(' entrei no contextname ');
+        //             //"projects/voicebot-judite/agent/sessions/$sessionId/contexts/decisao"
+        //             $context[0]->setLifespanCount(2);
 
-            try{
+        //             //Query Parameters
+        //             $queryParameters['queryParams'] = new QueryParameters();
+        //             $queryParameters['queryParams']->setContexts($context);
 
-            putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
-            //$client->useApplicationDefaultCredentials();
+        //     } catch (Exception $e) {
+        //             //echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+        //         $logger->info('erro no contexto: '. $e->getMessage());
+        //     }
 
-                    $contextsClient = new ContextsClient();
+        // }else{
 
-                    //context
-                    $context[] = new Context();
-                    $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
-                    $context[0]->setName($formattedName);
+	    //     $logger->info('n entrei no contextname ');
 
-            $logger->info(' context criado ');
+        //     $queryParameters = array();
 
-                    //"projects/voicebot-judite/agent/sessions/$sessionId/contexts/decisao"
-                    $context[0]->setLifespanCount(2);
+        // }
 
-                    //Query Parameters
-                    $queryParameters['queryParams'] = new QueryParameters();
-                    $queryParameters['queryParams']->setContexts($context);
-
-            } catch (Exception $e) {
-                    //echo 'Exceção capturada: ',  $e->getMessage(), "\n";
-                $logger->info('erro no contexto: '. $e->getMessage());
-            }
-
-        }else{
-
-	        $logger->info('n entrei no contextname ');
-
-            $queryParameters = array();
-
-        }
-
-        $logger->info('contextName ok');
+        //$logger->info('contextName ok');
 
         // create query input
         $queryInput = new QueryInput();
@@ -142,9 +113,6 @@ abstract class DialogFlow
 
         $queryResult = $response->getQueryResult();
 
-        //var_dump($queryResult->getOutputContexts());
-        //$queryResult->setOutputContexts($context);
-
         $queryText = $queryResult->getQueryText();
         $intent = $queryResult->getIntent();
         $ret['intentDisplayName'] = $intent->getDisplayName();
@@ -157,41 +125,31 @@ abstract class DialogFlow
 
         $ret['parameters']  = json_decode($queryResult->getParameters()->serializeToJsonString());
 
-        $iterator = $allResponses->getIterator();
+        //$iterator = $allResponses->getIterator();
 
-        while($iterator->valid()) {
+        // while($iterator->valid()) {
 
-            //echo $iterator->key() . ' => ' . print_r(get_class_methods($iterator->current() ), true) . "\n";
+        //     //echo $iterator->key() . ' => ' . print_r(get_class_methods($iterator->current() ), true) . "\n";
 
-            //first response
-            if($iterator->key() == 0) {
+        //     //first response
+        //     if($iterator->key() == 0) {
 
-                $content = $iterator->current()->getPayload();
+        //         $content = $iterator->current()->getPayload();
 
-                if ($content) {
+        //         if ($content) {
 
-                    $json = json_decode($content->serializeToJsonString());
-                    $ret['text'] = $json->speech->text;
+        //             $json = json_decode($content->serializeToJsonString());
+        //             $ret['text'] = $json->speech->text;
 
-                }
-            }
+        //         }
+        //     }
 
-            $iterator->next();
-        }
-
-/*
-        // output relevant info
-        print(str_repeat("=", 20) . PHP_EOL);
-        printf('Query text: %s' . PHP_EOL, $queryText);
-        printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
-            $confidence);
-        print(PHP_EOL);
-        printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
-*/
-
+        //     $iterator->next();
+        // }
+        
         $sessionsClient->close();
 
-	 $logger->info('return: '.print_r($ret,true));
+	    $logger->info('return: '.print_r($ret,true));
         return $ret;
     }
 
