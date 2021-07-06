@@ -64,7 +64,7 @@ class Translate
 
         // Instantiates a client
         $speech = new SpeechClient([
-            'projectId' => 'astrid-5a294',
+            'projectId' => 'voicebot-judite',
             'languageCode' => 'pt-BR',
         ]);
 
@@ -84,74 +84,6 @@ class Translate
         }
 
         return $ret;
-
-        // $uploadFileMimeType = mime_content_type($audio_path);
-        // $uploadFilePostKey = 'file';
-
-        // $uploadFile = new CURLFile(
-        //     $audio_path,
-        //     $uploadFileMimeType,
-        //     $uploadFilePostKey
-        // );
-    
-        // $curl = curl_init();
-
-        // curl_setopt_array($curl, array(
-        // CURLOPT_URL => 'https://storage.googleapis.com/upload/storage/v1/b/bk-audios/o?uploadType=media&name=Deus-Obrigado',
-        // CURLOPT_RETURNTRANSFER => true,
-        // CURLOPT_ENCODING => '',
-        // CURLOPT_MAXREDIRS => 10,
-        // CURLOPT_TIMEOUT => 0,
-        // CURLOPT_FOLLOWLOCATION => true,
-        // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        // CURLOPT_CUSTOMREQUEST => 'POST',
-        // CURLOPT_POSTFIELDS => [
-        //     $uploadFilePostKey => $uploadFile,
-        // ],
-        // CURLOPT_HTTPHEADER => array(
-        //     'Content-Type: audio/vnd.wave',
-        //     'Authorization: Bearer ya29.a0ARrdaM-lhdMkUowAAjG3oTx7sWEfFq5li2MNoM-2fDz1EeO4Hu2afzJAMsRSZWzPDWgGqznHiN3NXhJWdcSemSwWpsxa4Npul2r33nCbwi0nYEo84T6PdcJUrBmj0Hi7pGJvoni3-Vpqsa0jmPmu__XY_FJY'
-        // ),
-        // ));
-
-        // $responseStorage = curl_exec($curl);
-
-        // curl_close($curl);
-        // //return $responseStorage;
-
-        // $curl = curl_init();
-
-        // curl_setopt_array($curl, array(
-        // CURLOPT_URL => 'https://speech.googleapis.com/v1/speech:recognize',
-        // CURLOPT_RETURNTRANSFER => true,
-        // CURLOPT_ENCODING => '',
-        // CURLOPT_MAXREDIRS => 10,
-        // CURLOPT_TIMEOUT => 0,
-        // CURLOPT_FOLLOWLOCATION => true,
-        // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        // CURLOPT_CUSTOMREQUEST => 'POST',
-        // CURLOPT_POSTFIELDS =>'{
-        //     "config": {
-        //         "encoding": "LINEAR16",
-        //         "sampleRateHertz": 8000,
-        //         "languageCode": "pt-BR",
-        //         "enableWordTimeOffsets": false
-        //     },
-        //     "audio": {
-        //         "uri": "gs://bk-audios/Deus-Obrigado"
-        //     }
-        // }',
-        // CURLOPT_HTTPHEADER => array(
-        //     'Content-Type: application/json',
-        //     'Authorization: Bearer ya29.a0ARrdaM_0dTmFLxbcYLN6ogqnZmD3JzqtqqtuAphjB_aTe-WG8MAKrVBu7r1A4pN8ygczZt86CBJqljpAsI6OPdOD29eZkOUNbe28W332sVbeKMZ7Y2Bhp9sOoyUDlaEYkls72f67lbkbHtDeeUgXnOv4WwF4'
-        // ),
-        // ));
-
-        // $response = curl_exec($curl);
-
-        // curl_close($curl);
-
-        // return $response;
 
     }
     

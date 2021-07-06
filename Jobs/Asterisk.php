@@ -610,7 +610,7 @@ class Asterisk implements IAsterisk
 
         // }else{
         var_dump($response);
-
+        
         $ret = [];
         $ret = get_object_vars($response);
 
