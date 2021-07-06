@@ -15,7 +15,7 @@ class Translate
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=AIzaSyDdo5kxyDffKhLt475Z_F5O4bu0nNoOjLs',
+        CURLOPT_URL => 'https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=AIzaSyCYBsO7GhOFMmxei8Bo0YyrGlstiqJfZok',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -64,7 +64,7 @@ class Translate
 
         // Instantiates a client
         $speech = new SpeechClient([
-            'projectId' => 'speech-project-212814',
+            'projectId' => 'astrid-5a294',
             'languageCode' => 'pt-BR',
         ]);
 
