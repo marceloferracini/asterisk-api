@@ -134,12 +134,12 @@ abstract class DialogFlow
             //first response
             if($iterator->key() == 0) {
 
-                $content = $iterator->current()->getPayload();
+                $content = $iterator->current()->getText();
 
                 if ($content) {
 
                     $json = json_decode($content->serializeToJsonString());
-                    $ret['text'] = $json->speech->text;
+                    $ret['text'] = $json->text;
 
                 }
             }
