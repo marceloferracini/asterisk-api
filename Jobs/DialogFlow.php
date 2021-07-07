@@ -139,7 +139,7 @@ abstract class DialogFlow
                 if ($content) {
 
                     $json = json_decode($content->serializeToJsonString());
-                    $ret['text'] = $json->text;
+                    $ret['text'] = $json->text[0];
 
                 }
             }
