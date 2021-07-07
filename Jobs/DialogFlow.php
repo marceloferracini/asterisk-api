@@ -61,45 +61,45 @@ abstract class DialogFlow
 
 	    $logger->info('create text input ');
         
-        // if($contextName){
+        if($contextName){
 
-        //     $logger->info(' entrei no contextname ');
+            $logger->info(' entrei no contextname ');
 
-        //     try{
+            try{
 
-        //     putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
-        //     //$client->useApplicationDefaultCredentials();
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
+            //$client->useApplicationDefaultCredentials();
 
-        //             $contextsClient = new ContextsClient();
+                    $contextsClient = new ContextsClient();
 
-        //             //context
-        //             $context[] = new Context();
-        //             $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
-        //             $context[0]->setName($formattedName);
+                    //context
+                    $context[] = new Context();
+                    $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
+                    $context[0]->setName($formattedName);
 
-        //     $logger->info(' context criado ');
+            $logger->info(' context criado ');
 
-        //             //"projects/voicebot-judite/agent/sessions/$sessionId/contexts/decisao"
-        //             $context[0]->setLifespanCount(2);
+                    //"projects/voicebot-judite/agent/sessions/$sessionId/contexts/decisao"
+                    $context[0]->setLifespanCount(2);
 
-        //             //Query Parameters
-        //             $queryParameters['queryParams'] = new QueryParameters();
-        //             $queryParameters['queryParams']->setContexts($context);
+                    //Query Parameters
+                    $queryParameters['queryParams'] = new QueryParameters();
+                    $queryParameters['queryParams']->setContexts($context);
 
-        //     } catch (Exception $e) {
-        //             //echo 'Exceção capturada: ',  $e->getMessage(), "\n";
-        //         $logger->info('erro no contexto: '. $e->getMessage());
-        //     }
+            } catch (Exception $e) {
+                    //echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+                $logger->info('erro no contexto: '. $e->getMessage());
+            }
 
-        // }else{
+        }else{
 
-	    //     $logger->info('n entrei no contextname ');
+	        $logger->info('n entrei no contextname ');
 
-        //     $queryParameters = array();
+            $queryParameters = array();
 
-        // }
+        }
 
-        //$logger->info('contextName ok');
+        $logger->info('contextName ok');
 
         // create query input
         $queryInput = new QueryInput();
@@ -125,27 +125,27 @@ abstract class DialogFlow
 
         $ret['parameters']  = json_decode($queryResult->getParameters()->serializeToJsonString());
 
-        //$iterator = $allResponses->getIterator();
+        $iterator = $allResponses->getIterator();
 
-        // while($iterator->valid()) {
+        while($iterator->valid()) {
 
-        //     //echo $iterator->key() . ' => ' . print_r(get_class_methods($iterator->current() ), true) . "\n";
+            //echo $iterator->key() . ' => ' . print_r(get_class_methods($iterator->current() ), true) . "\n";
 
-        //     //first response
-        //     if($iterator->key() == 0) {
+            //first response
+            if($iterator->key() == 0) {
 
-        //         $content = $iterator->current()->getPayload();
+                $content = $iterator->current()->getPayload();
 
-        //         if ($content) {
+                if ($content) {
 
-        //             $json = json_decode($content->serializeToJsonString());
-        //             $ret['text'] = $json->speech->text;
+                    $json = json_decode($content->serializeToJsonString());
+                    $ret['text'] = $json->speech->text;
 
-        //         }
-        //     }
+                }
+            }
 
-        //     $iterator->next();
-        // }
+            $iterator->next();
+        }
         
         $sessionsClient->close();
 
