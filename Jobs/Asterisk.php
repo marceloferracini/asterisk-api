@@ -78,12 +78,6 @@ class Asterisk implements IAsterisk
 
     }
 
-    public function bozoMarcelo()
-    {
-        $ret = Translate::retAlgo();
-        //echo "VOLTOU ESTE VALOR " . $ret;
-    }
-
     /**
      * create all tables and fill it with the default value
      */
@@ -589,31 +583,9 @@ class Asterisk implements IAsterisk
 
         $translate = new Translate();
         $response = $translate->TranslateSpeechToText($audio_path);
-
-        // $this->curl->post( getenv("TRANSLATE-API-URL") . '/speech-to-text', array(
-        //                                                                           "audio" => "@" .  $audio_path,   
-        //                                                                    ));
-        // $this->logger->info($this->file_path.' SPEECH TO TEXT');
-
-	    // if ($this->curl->error) {
-
-        //     $ret['transcript'] = 'Error: ' . $this->curl->errorCode . ': ' . $this->curl->errorMessage . "\n";
-        //     $this->logger->info($this->file_path.' ERROR:'.$this->curl->errorCode."-".$this->curl->errorMessage);
-        //     $ret['status'] = 0;
-
-        //     //move log files
-        //     $time = microtime(true);
-        //     $FileName = substr($this->file_path,strpos($this->file_path, '/')+1);
-        //     system('cp '.$this->file_path.'.wav /tmp/AsteriskLogs/'.$time.'.wav');
-        //     $this->logger->info($this->file_path.' Put file on BKP:'.$time.'.wav');
-
-
-        // }else{
-        var_dump($response);
-        
+                
         $ret = [];
-        $ret = get_object_vars($response);
-
+        $ret = $response;
         
         $ret['status'] = 1;
 
