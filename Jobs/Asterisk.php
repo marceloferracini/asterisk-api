@@ -89,31 +89,29 @@ class Asterisk implements IAsterisk
 
         //fill default values
         $defaults[] = array('textName'  => 'MENS_AGUARDE0',
-                            'textValue' => 'Certo, Aguarde só um momentinho que vou verificar');
+                            'textValue' => 'Certo, Aguarde só um momentinho');
         $defaults[] = array('textName'  => 'MENS_AGUARDE1',
                             'textValue' => 'OK, só um minuto');
         $defaults[] = array('textName'  => 'MENS_AGUARDE2',
-                            'textValue' => 'só um instante, vou verificar');
+                            'textValue' => 'OK, só um instante');
         $defaults[] = array('textName'  => 'MENS_AGUARDE3',
-                            'textValue' => 'Vou checar pra você');
+                            'textValue' => 'Aguarde só um segundinho');
         $defaults[] = array('textName'  => 'MENS_NAO_ENTENDI',
                             'textValue' => 'Não entendi sua pergunta, poderia repetir?');
         $defaults[] = array('textName'  => 'MENS_NAO_CONSEGUI_AJUDAR',
-                            'textValue' => 'Infelizmente nao conseguirei te ajudar, entre em contato em horario comercial ou acesse nosso site www.astrocentro.com.br, obrigado');
+                            'textValue' => 'Infelizmente nao conseguirei te ajudar, entre em contato com nosso uatiszap ou nosso site mamamiapizzaria ponto com ponto bê erre');
         $defaults[] = array('textName'  => 'MENS_DUVIDA',
-                            'textValue' => 'Consegui tirar sua dúvida, diga sim ou não ');
+                            'textValue' => 'Consegui tirar te ajudar, Ou ainda consigo te ajudar em algo, estou a disposição é só falar caso queira saber mais informações como por exemplo, nossos sabores de pizzas, horários, enfim é só perguntar');
         $defaults[] = array('textName'  => 'MENS_CONSEGUI_AJUDAR',
-                            'textValue' => 'Fico muito feliz em ter ajudado, caso tenha novas dúvidas nos contate, ficaremos felizes em te atender. Forte abraço!!');
+                            'textValue' => 'Fico muito feliz em ter ajudado, caso precise de mais alguma coisa a total disposição, ficaremos felizes em te atender. Forte abraço!!');
         $defaults[] = array('textName'  => 'MENS_ENTENDI',
                             'textValue' => 'Entendi, vamos tentar de outra forma então, me diga em poucas palavras o que você precisa');
         $defaults[] = array('textName'  => 'MENS_DEFAULT',
-                            'textValue' => 'Nesse caso não posso ajuda-lo, peço que entre em contato com nosso sac de segunda a sexta-feira em horário comercial.');
+                            'textValue' => 'Nesse caso não posso ajuda-lo, peço que entre em contato com nosso uatiszap');
         $defaults[] = array('textName'  => 'MENS_DECISAO',
-                            'textValue' => 'Desculpe, não consegui entender, diga pausadamente, sim ou não');
-        $defaults[] = array('textName'  => 'MENS_DEFAULT',
-                            'textValue' => 'Nesse caso ainda não posso ajudá la, peço que entre em contato com nosso sac de segunda a sexta-feira das nove as dezenove horas.');
+                            'textValue' => 'Desculpe, não consegui entender, diga novamente de forma mais clara, por favor');
         $defaults[] = array('textName'  => 'MENS_OUTRA_DUVIDA',
-                            'textValue' => 'Tem mais alguma dúvida?');
+                            'textValue' => 'Tem mais coisa que eu consiga lhe ajuda, só falar.');
 
         //store on DB
         foreach ($defaults as $default)  AllDefaultMessages::Create($default);
