@@ -101,7 +101,7 @@ class Asterisk implements IAsterisk
         $defaults[] = array('textName'  => 'MENS_NAO_CONSEGUI_AJUDAR',
                             'textValue' => 'Infelizmente nao conseguirei te ajudar, entre em contato com nosso uatiszap ou nosso site mamamiapizzaria ponto com ponto bê erre');
         $defaults[] = array('textName'  => 'MENS_DUVIDA',
-                            'textValue' => 'Consegui tirar te ajudar, Ou ainda consigo te ajudar em algo, estou a disposição é só falar caso queira saber mais informações como por exemplo, nossos sabores de pizzas, horários, enfim é só perguntar');
+                            'textValue' => 'Consegui te ajudar ? Estou a disposição é só falar, caso queira saber mais informações como por exemplo, nossos sabores de pizzas, horários, enfim é só me perguntar');
         $defaults[] = array('textName'  => 'MENS_CONSEGUI_AJUDAR',
                             'textValue' => 'Fico muito feliz em ter ajudado, caso precise de mais alguma coisa a total disposição, ficaremos felizes em te atender. Forte abraço!!');
         $defaults[] = array('textName'  => 'MENS_ENTENDI',
