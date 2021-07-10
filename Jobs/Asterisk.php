@@ -368,8 +368,6 @@ class Asterisk implements IAsterisk
 
 		    $this->agi->exec("NOOP", "Sai\ do\ AstridAnswer:\ ");
 
-	        var_dump($astrid_answer);	
-
             $time_end = microtime(true);
 
 	        echo "\n";
@@ -399,8 +397,6 @@ class Asterisk implements IAsterisk
 
 
             $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
-
-	        var_dump($astrid_answer);
 
             //if exist parameters on DialogFlow, set it to Asterisk
             if ($astrid_answer['parameters']) {

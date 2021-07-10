@@ -9,15 +9,6 @@ use Google\Cloud\Speech\SpeechClient;
 
 class Translate 
 {
-    private $dotenv;
-
-    public function  __construct($array_file)
-    {
-        //load .env file
-        $this->dotenv = new Dotenv\Dotenv(__DIR__ . "/../");
-        $this->dotenv->load();
-    }
-
     public function TranslateTextToSpeech($message) {        
 
         $curl = curl_init();
