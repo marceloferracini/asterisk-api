@@ -13,8 +13,10 @@ class Translate
 
         $curl = curl_init();
 
+        $apiKey = getenv(GOOGLE_API_KEY);
+
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=AIzaSyCYBsO7GhOFMmxei8Bo0YyrGlstiqJfZok',
+        CURLOPT_URL => 'https://texttospeech.googleapis.com/v1beta1/text:synthesize?key='.$apiKey,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

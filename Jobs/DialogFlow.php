@@ -38,7 +38,6 @@ abstract class DialogFlow
         $logger->info('Entrei no detectIntentTexts ');
 
         // new session
-       // $key = array('credentials' => __DIR__ . '/../Storage/google_key.json');
 	    $key = array('credentials' => '/var/lib/asterisk/agi-bin/asterisk-api/Storage/google_key.json');
 
         $logger->info('set credentials ');
@@ -51,53 +50,12 @@ abstract class DialogFlow
 
         $logger->info('get session ');
 
-        //printf('Session path: %s' . PHP_EOL, $session);
-
         // create text input
         $textInput = new TextInput();
         $textInput->setText($text);
         $textInput->setLanguageCode($languageCode);
 
-
 	    $logger->info('create text input ');
-        
-        // if($contextName){
-
-        //     $logger->info(' entrei no contextname ');
-
-        //     try{
-
-        //     putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/lib/asterisk/agi-bin/interface-astrid-asterisk/Storage/google_key.json');
-        //     //$client->useApplicationDefaultCredentials();
-
-        //             $contextsClient = new ContextsClient();
-
-        //             //context
-        //             $context[] = new Context();
-        //             $formattedName = $contextsClient->contextName($projectId, $sessionId, $contextName);
-        //             $context[0]->setName($formattedName);
-
-        //     $logger->info(' context criado ');
-
-        //             //"projects/voicebot-judite/agent/sessions/$sessionId/contexts/decisao"
-        //             $context[0]->setLifespanCount(2);
-
-        //             //Query Parameters
-        //             $queryParameters['queryParams'] = new QueryParameters();
-        //             $queryParameters['queryParams']->setContexts($context);
-
-        //     } catch (Exception $e) {
-        //             //echo 'Exceção capturada: ',  $e->getMessage(), "\n";
-        //         $logger->info('erro no contexto: '. $e->getMessage());
-        //     }
-
-        // }else{
-
-	    //     $logger->info('n entrei no contextname ');
-
-        //     $queryParameters = array();
-
-        // }
 
         $logger->info('contextName ok');
 
@@ -117,7 +75,6 @@ abstract class DialogFlow
         $intent = $queryResult->getIntent();
         $ret['intentDisplayName'] = $intent->getDisplayName();
         $ret['confidence'] = $queryResult->getIntentDetectionConfidence();
-        //$fulfilmentText = $queryResult->getFulfillmentText();
 
         $allResponses = $queryResult->getFulfillmentMessages();
 
@@ -128,8 +85,6 @@ abstract class DialogFlow
         $iterator = $allResponses->getIterator();
 
         while($iterator->valid()) {
-
-            //echo $iterator->key() . ' => ' . print_r(get_class_methods($iterator->current() ), true) . "\n";
 
             //first response
             if($iterator->key() == 0) {
