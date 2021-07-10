@@ -297,7 +297,7 @@ class Asterisk implements IAsterisk
 
 
         //translate text to audio
-        $ret = $this->textToSpeech( $astrid_answer['text'] );
+        $ret = $this->textToSpeech($astrid_answer['text']);
 
         $time_end = microtime(true);
 
