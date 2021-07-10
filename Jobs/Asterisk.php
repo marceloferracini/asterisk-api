@@ -140,7 +140,7 @@ class Asterisk implements IAsterisk
 	    foreach ($messages as $message) {
             
 		    //translate text to audio
-            $ret = $this->textToSpeech($message->textValue, $message->textName);
+            $ret = $this->textToSpeech( $message->textValue );
 
 	    	if($ret['status'] == 1){
                 $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
@@ -297,7 +297,7 @@ class Asterisk implements IAsterisk
 
 
         //translate text to audio
-        $ret = $this->textToSpeech($astrid_answer['text']);
+        $ret = $this->textToSpeech( $astrid_answer['text'] );
 
         $time_end = microtime(true);
 
@@ -547,11 +547,11 @@ class Asterisk implements IAsterisk
      * @return array
      *
      */
-    public function textToSpeech($messageTextValue, $messageTextName = null)
+    public function textToSpeech($message)
     {
 
         $translate = new Translate();
-        $response = $translate->TranslateTextToSpeech($messageTextValue, $messageTextName);
+        $response = $translate->TranslateTextToSpeech($message);
 	
 	    
         $ret['transcript'] = "/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $response;

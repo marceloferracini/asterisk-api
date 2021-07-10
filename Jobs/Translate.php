@@ -9,8 +9,16 @@ use Google\Cloud\Speech\SpeechClient;
 
 class Translate 
 {
+    private $dotenv;
 
-    public function TranslateTextToSpeech($messageTextValue, $messageTextName = null) {        
+    public function  __construct($array_file)
+    {
+        //load .env file
+        $this->dotenv = new Dotenv\Dotenv(__DIR__ . "/../");
+        $this->dotenv->load();
+    }
+
+    public function TranslateTextToSpeech($message) {        
 
         $curl = curl_init();
 
@@ -25,7 +33,7 @@ class Translate
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS =>'{
             "input": {
-                "text" : "'.$messageTextValue.'"
+                "text" : "'.$message.'"
             },
             "voice" : {
                 "languageCode" : "pt-BR",
@@ -49,12 +57,7 @@ class Translate
         
         $result = [];
         $result['AudioStream'] = base64_decode($fileData['audioContent']);
-        
-        if($messageTextName != null) {
-            $result['file_name'] = $messageTextName .'-Google.mp3';
-        } else {
-            $result['file_name'] = uniqid().'-Google.mp3';
-        }
+        $result['file_name'] = uniqid().'-Google.mp3';
 
 
 	    file_put_contents("/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $result['file_name'], $result['AudioStream']);
