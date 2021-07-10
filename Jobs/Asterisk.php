@@ -547,11 +547,11 @@ class Asterisk implements IAsterisk
      * @return array
      *
      */
-    public function textToSpeech($messageTextValue, $messageTextName)
+    public function textToSpeech($messageTextValue, $messageTextName = null)
     {
 
         $translate = new Translate();
-        $response = $translate->TranslateTextToSpeech($messageTextValue, $messageTextName);
+        $response = $translate->TranslateTextToSpeech($messageTextValue, $messageTextName = null);
 	
 	    
         $ret['transcript'] = "/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $response;
