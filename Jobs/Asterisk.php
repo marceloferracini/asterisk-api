@@ -140,7 +140,7 @@ class Asterisk implements IAsterisk
 	    foreach ($messages as $message) {
             
 		    //translate text to audio
-            $ret = $this->textToSpeech( $message->textValue );
+            $ret = $this->textToSpeech($message->textValue, $message->textName);
 
 	    	if($ret['status'] == 1){
                 $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
