@@ -54,7 +54,7 @@ interface IAsterisk
      * @param $message
      * @return mixed
      */
-    public function textToSpeech($message);
+    public function textToSpeech($messageTextValue, $messageTextName);
 
     /**
      * @param string $s3Url
