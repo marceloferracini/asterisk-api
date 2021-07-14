@@ -116,14 +116,14 @@ class Asterisk implements IAsterisk
         //store on DB
         foreach ($defaults as $default)  AllDefaultMessages::Create($default);
 
-        var_dump('Gerando áudios, dê ENTER até o final');
+        var_dump('Gerando os áudios padrões, dê ENTER até o final');
 
         $messages = AllDefaultMessages::All();
 
         foreach ($messages as $message) {
             
 		    //translate text to audio
-            $ret = $this->textToSpeech( $message->textValue );
+            $ret = $this->textToSpeechName($message->textValue, $$message->textName);
 
 	    	if($ret['status'] == 1){
                 $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
@@ -568,6 +568,29 @@ class Asterisk implements IAsterisk
 
         $translate = new Translate();
         $response = $translate->TranslateTextToSpeech($message);
+	
+	    
+        $ret['transcript'] = "/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $response;
+        $ret['fileName'] =  $response;
+        $ret['status'] = 1;
+	
+        return $ret;
+
+    }
+
+    /**
+     * call the api to do the text to speech translation
+     *
+     * @param string $message
+     *
+     * @return array
+     *
+     */
+    public function textToSpeechName($messageText, $messageName)
+    {
+
+        $translate = new Translate();
+        $response = $translate->TranslateTextToSpeechName($messageText, $messageName);
 	
 	    
         $ret['transcript'] = "/var/lib/asterisk/agi-bin/asterisk-api/audios/" . $response;
