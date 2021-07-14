@@ -51,11 +51,7 @@ function main($arrayArgv){
         case 'setupDB':
             echo $asterisk->setupDB();
             break;
-        
-        case 'geraAudio':
-            echo $asterisk->geraAudio();
-            break;
-
+    
         case 'getDefaultMessages':
             echo $asterisk->getDefaultMessages( $arrayArgv[1] );
             break;
