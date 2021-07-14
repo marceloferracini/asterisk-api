@@ -105,7 +105,7 @@ class Translate
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS =>'{
             "input": {
-                "text" : "'.$message.'"
+                "text" : "'.$messageText.'"
             },
             "voice" : {
                 "languageCode" : "pt-BR",
