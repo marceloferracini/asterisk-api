@@ -78,6 +78,39 @@ class Asterisk implements IAsterisk
 
     }
 
+    public function geraAudio() {
+
+        var_dump('Inicio do Gera Audio');
+
+        $messages = AllDefaultMessages::where('textName', 'like', $like.'%')->get();
+
+        foreach ($messages as $message) {
+
+            var_dump('Começo do FOR');
+            
+		    //translate text to audio
+            $ret = $this->textToSpeech( $message->textValue );
+
+	    	if($ret['status'] == 1){
+                $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
+
+                var_dump($message->textName . ">>>> ". $ret['localFile']);
+
+                $this->agi->exec("NOOP",  $message->textName . "\ ". $ret['localFile']);
+
+                echo "\n";
+
+                $this->agi->set_variable($message->textName, $ret['localFile'] );
+
+            }else{
+
+                $this->agi->exec("NOOP",  "Error on   ". $message->textName. ":::". $ret['localFile']);
+
+            }
+
+        }
+    }
+
     /**
      * create all tables and fill it with the default value
      */
