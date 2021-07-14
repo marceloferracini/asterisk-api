@@ -78,7 +78,8 @@ class Asterisk implements IAsterisk
 
     }
 
-    public function geraAudio() {
+    public function geraAudio()
+    {
 
         var_dump('Inicio do Gera Audio');
 
