@@ -116,7 +116,7 @@ class Asterisk implements IAsterisk
         //store on DB
         foreach ($defaults as $default)  AllDefaultMessages::Create($default);
 
-        var_dump('Gerando os áudios padrões, dê ENTER até o final');
+        var_dump('GERANDO OS ÁUDIOS PADRÕES, AGUARDE ATÉ FINALIZAR');
 
         $messages = AllDefaultMessages::All();
 
@@ -128,7 +128,7 @@ class Asterisk implements IAsterisk
 	    	if($ret['status'] == 1){
                 $fileRemovePath = parse_url($ret['fileName']);
                 $ret['fileName'] = $fileRemovePath[path];
-                
+
                 $ret['localFile'] = $this->convertFileToAsterisk($ret['transcript'], $ret['fileName']);
 
                 var_dump($message->textName . ">>>> ". $ret['localFile']);
