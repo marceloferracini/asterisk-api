@@ -1,12 +1,1 @@
-{
-  "type": "service_account",
-  "project_id": "voicebot-judite",
-  "private_key_id": "d9af55bfd9f3506dd5ee78be953aa0bb9972a1b8",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDPUmUW4o5i52Z5\nLNRg4joTNQ+upcekkZtI0ekCFRg5zrc/X+wZhUtzpLXnZc8aJy1bKJlrTeMhPZcj\nO4ggpRz5hfBRM7IKJXUEGIFAhFPhLQBroF3neRPUxfNz96V3zN1/le1yP58DrSGn\nYnfXZ4ou9hfAa6o4P+NSknI1Y5QI8o22cBwetwpRhhtB7Fa3HMMZ/ZIkWL36U0mr\nTuaVNIplxz6ndHp8u/tZkN6ttkacN+6afwQiy85XOlu4oKN8ttq5gG1AWdUQX4Gh\n7dScr7x/IQynZzmdgLwairkF8Dv7YOzbPAiKjgBelhq0EKiI3nv4gHeUx8S8ud8T\nWVo/xiBVAgMBAAECggEAE2clMdqbM9NvSjjxWW3ivIhzQseeIx9DdrG6imjZ/xMD\nIGnESXEpqhWItrLXCp4PByCKFzpPXv2KJxB7wX5ic1HfN2JMr9lola0Lb7PSu9i/\n2NLF5xN0US4Dhl9ve4JPWpD4C4C7y5bI9wbmq2Cz1IhQmcAZyrDkAAbXrHp40Mtj\nYsxkZ9RM5A4oZ5y8DIygqnXgMMkZ46HEmH7ch7B7x+BbovWO/N2nlTiwpt3WYCBJ\nlMDG36ICUYLbTNleEUucDWXutMw5m0TfeSZsJffp+Qul8YkZ23x8CkrpAMpaj/1v\nzvTvt43bWNdjEP21vet2gwvEmF5yD3jteV4mZneiUQKBgQDvxh40MumZC6J7ns9U\nqzJDXkNdwtHp1OpD+ndmjVQwpTm9Bn/6aD7rehLdy+z95vmEagelHl76+aQpAcwD\nr8l2z3iPzCPqh/ms1B9p1vfDZVA1+GegItOowAiUtetPfKsOlVf+NpAToC1x3Pe/\na0AiPIDlfJD3K5WtG2VYZthzzQKBgQDdWhKKBbE9QKt81ldEe0lW7kU06rURLaBG\nGjYOdaWQWe8hiN02dRXN6UoLgH7Vjet5BoaJorNSumzyrfRJNU6ABj8Jz9QQvoMP\nAbDlVyxHRx4Ikt17sgxSEv4Ms4ypcwtwhwNAy+xGE2CrqaISo7ws2EOeXB6+dhMl\nv3Sh7bZmqQKBgBqpBby6GH067PMf4l/AtVMGTSlEu0BruyyZ0eLmPgE2refVrC80\nniJirWxZ+1zz7LSLcZQrf1YaoeUpXPzf89+xC++5PBkcy2crIt8K1vuz7SpDF4qX\ntL8jsxCN9b8d1otFkcYjXPvBqKvrbOSs0TG9Vnut0RSalQbtb+RXcyPVAoGBAJ0m\nFYNoBy01fIpkohA8dxUAlKG9AE/x1Jfwg/BAFgslzmBAisze01wdBDSmRWXYHBUQ\nTPPqTuWs9SxV09klv1WlGZwdsLEykFlXGf+4o/b2xpvPqO7ouVaLpVHfJz4mLzj0\noZqfLF+T4k39YNNa633rDBah0DHoIi/qfSN5YMYBAoGBAIrVjM0bOFdrRLW86YKc\nGMjBL3s94/vSXHo/ueD+2FGQBneyhq7RviDBsvqa25IbkNzC/je3Ech0DH1QuMK9\n2aGPWBiG0iA90YI148vztStO6DUXU5ILWstGB0cUhawzPlaxVoPwBdxjBpKi+gRu\nG2lXoG7f/Ao6n+B51J3AVS0I\n-----END PRIVATE KEY-----\n",
-  "client_email": "voicebot-service-account@voicebot-judite.iam.gserviceaccount.com",
-  "client_id": "109265139583016098613",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/voicebot-service-account%40voicebot-judite.iam.gserviceaccount.com"
-}
+
